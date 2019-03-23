@@ -1,4 +1,4 @@
-# Ftontend TODOS
+# Frontend TODOS
 
 # TODOS
 - [ ] Fake purchase history single user
