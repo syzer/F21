@@ -1,30 +1,61 @@
 <template>
   <section class="page">
-    <navbar />
+    <logo></logo>
     <section class="container">
       <div>
-        <logo />
-        <h1 class="title">
-          Profile page
-        </h1>
-        <h2 class="subtitle">Hi {{ user }}</h2>
+        <h5 class="title">
+          Welcome Piotr
+        </h5>
+        <b-form-group label="You are interested in recommendations for ">
+          <b-form-checkbox-group
+            v-model="selected"
+            checked=""
+            stacked
+            name="flavour2a"
+            :options="options"
+          />
+        </b-form-group>
+        <b-input></b-input>
       </div>
     </section>
   </section>
 </template>
+
 <script>
-// import { mapMutations } from 'vuex'
 import Logo from '~/components/Logo.vue'
-import Navbar from '~/components/Navbar.vue'
+
+import 'vue-thin-modal/dist/vue-thin-modal.css'
 
 export default {
+  data() {
+    return {
+      selected: [], // Must be an array reference!
+      options: [
+        { text: 'Tea and coffee', value: 'orange' },
+        { text: 'Shoes', value: 'apple' },
+        { text: 'Furniture', value: 'pineapple' },
+        { text: 'Music events', value: 'grape' }
+      ]
+    }
+  },
   components: {
-    Logo,
-    Navbar
+    Logo
   },
   computed: {
-    user() {
-      return this.$store.state.user
+    counter() {
+      return this.$store.state.counter
+    },
+    discounts() {
+      return this.$store.state.discounts
+    }
+  },
+  methods: {
+    open() {
+      this.$modal.push('example')
+    },
+
+    close() {
+      this.$modal.pop()
     }
   }
 }
