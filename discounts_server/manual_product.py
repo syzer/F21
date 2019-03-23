@@ -3,7 +3,7 @@ import json
 
 def moroccan_tea():
 
-    tea_json_str = "{
+    tea_dict = {
       'id':5335294524,
       'name': 'Sirocco Moroccan Mint Tee',
       'accessible_information_text': 'Im Gegensatz zu der in Deutschland ' \
@@ -19,8 +19,8 @@ def moroccan_tea():
                                      'mittlerweile selbst marokkanische Minze in nachhaltiger Qualität an.',
       'type': 'product',
       'price': 16.0,
-      'original_price': 17.2} "
-    tea_json = json.loads(tea_json_str)
+      'original_price': 17.2}
+    tea_json = json.dumps(tea_dict)
     return tea_json
 
 
