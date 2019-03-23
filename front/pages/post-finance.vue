@@ -9,9 +9,19 @@
   </section>
 </template>
 <script>
+import io from 'socket.io-client'
+
 export default {
   components: {},
-  computed: {}
+  computed: {},
+  mounted() {
+    const socket = io('http://localhost:4000')
+    socket.emit('chat message', 'connecting')
+
+    socket.on('personalizedDiscounts', discounts => {
+      this.$store.commit('newDiscounts', discounts)
+    })
+  }
 }
 </script>
 

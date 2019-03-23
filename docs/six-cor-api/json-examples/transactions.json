@@ -145,7 +145,39 @@
           }
         }
       ]
+    },
+    {
+      "entryId" : "ENTRY523456789",
+      "transactionType" : "DBIT",
+      "bookingDate" : "2018-10-11",
+      "valueDate" : "2018-10-11",
+      "bankTransactionCode" : {
+        "domainCode" : "VISECA"
+      },
+      "amount" : {
+        "currency" : "CHF",
+        "amount" : "45"
+      },
+      "additionalEntryInformation" : "Popa Chubby concert ",
+      "transactions" : [
+        {
+          "transactionId" : "trx523456789-01",
+          "transactionType" : "DBIT",
+          "bankTransactionCode" : {
+            "domainCode" : "VISECA"
+          },
+          "amount" : {
+            "currency" : "CHF",
+            "amount" : "45"
+          },
+          "counterparty" : {
+            "name" : "Moods Club"
+            }
+          }
+        }
+      ]
     }
+
 
   ],
   "_links" : {
