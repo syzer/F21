@@ -1,6 +1,4 @@
-import json
 import requests
-
 
 def get_products(limit=20):
     """
@@ -8,6 +6,7 @@ def get_products(limit=20):
     :param limit: Max number of products
     :return: The products information in JSON
     """
+
     headers = {
         'Accept': 'application/json, text/javascript, */*; q=0.01',
         'Origin': 'https://produkte.migros.ch',
@@ -28,9 +27,7 @@ def get_products(limit=20):
     )
 
     response = requests.get('https://web-api.migros.ch/widgets/product_fragments_json', headers=headers, params=params)
-    json_response = json.loads(response.text)
-    return json_response
-
+    return response
 
 def get_ratings(item_ids):
     """
@@ -53,6 +50,4 @@ def get_ratings(item_ids):
         ('item_ids', item_ids))
 
     response = requests.get('https://web-api.migros.ch/widgets/ratings/product/items', headers=headers, params=params)
-    json_response = json.loads(response.text)
-    return json_response
-
+    return response
