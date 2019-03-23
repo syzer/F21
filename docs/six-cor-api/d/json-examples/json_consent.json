@@ -1,0 +1,38 @@
+[
+  {
+    "useCase" : "ais",
+    "accounts" : [
+      {
+        "accountId": "13579",
+        "iban": "CH123131231231231",
+        "currency": "CHF",				
+        "designation": "Kontokorrent ABC"		
+      },
+      {
+        "accountId": "24680",
+        "iban": "CH0938409809823",
+        "currency": "EUR",
+        "designation": "Kontokorrent DEF"
+      }
+    ]
+  },
+  {
+    "useCase" : "pis",
+    "accounts" : [
+      {
+        "accountId": "13579",
+        "iban": "CH123131231231231",
+        "currency": "CHF",				
+        "designation": "Kontokorrent ABC",
+        "allowedCurrencies": [ "CHF", "EUR", "USD" ] 
+      },
+      {
+        "accountId": "24680",
+        "iban": "CH0938409809823",
+        "currency": "EUR",
+        "designation": "Kontokorrent DEF",
+        "allowedCurrencies": [ "EUR" ]
+      }
+    ]
+  }
+]

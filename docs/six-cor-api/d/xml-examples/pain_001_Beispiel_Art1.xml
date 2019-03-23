@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+(C) Copyright 2010, SKSF, www.sksf.ch
+
+Anregungen und Fragen zu diesem Dokument können an das jeweilige Finanzinstitut gerichtet werden. 
+Allgemeine Anregungen können auch bei der SIX Interbank Clearing AG unter folgender Adresse angebracht werden: 
+pm@six-group.com
+-->
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd  pain.001.001.03.ch.02.xsd">
+	<CstmrCdtTrfInitn>
+		<GrpHdr>
+			<MsgId>MSG-01</MsgId>
+			<CreDtTm>2010-02-15T07:30:00</CreDtTm>
+			<NbOfTxs>1</NbOfTxs>
+			<CtrlSum>3949.75</CtrlSum>
+			<InitgPty>
+				<Nm>MUSTER AG</Nm>
+			</InitgPty>
+		</GrpHdr>
+		<PmtInf>
+			<PmtInfId>PMTINF-01</PmtInfId>
+			<PmtMtd>TRF</PmtMtd>
+			<BtchBookg>true</BtchBookg>
+			<ReqdExctnDt>2010-02-22</ReqdExctnDt>
+			<Dbtr>
+				<Nm>MUSTER AG</Nm>
+			</Dbtr>
+			<DbtrAcct>
+				<Id>
+					<IBAN>CH5481230000001998736</IBAN>
+				</Id>
+				<Tp>
+					<Prtry>NOA</Prtry>
+				</Tp>
+			</DbtrAcct>
+			<DbtrAgt>
+				<FinInstnId>
+					<BIC>RAIFCH22</BIC>
+				</FinInstnId>
+			</DbtrAgt>
+			<CdtTrfTxInf>
+				<PmtId>
+					<InstrId>INSTRID-01-01</InstrId>
+					<EndToEndId>ENDTOENDID-001</EndToEndId>
+				</PmtId>
+				<PmtTpInf>
+					<LclInstrm>
+						<Prtry>CH01</Prtry>
+					</LclInstrm>
+				</PmtTpInf>
+				<Amt>
+					<InstdAmt Ccy="CHF">3949.75</InstdAmt>
+				</Amt>
+				<CdtrAcct>
+					<Id>
+						<Othr>
+							<Id>01-39139-1</Id>
+						</Othr>
+					</Id>
+				</CdtrAcct>
+				<RmtInf>
+					<Strd>
+						<CdtrRefInf>
+							<Ref>210000000003139471430009017</Ref>
+						</CdtrRefInf>
+					</Strd>
+				</RmtInf>
+			</CdtTrfTxInf>
+		</PmtInf>
+	</CstmrCdtTrfInitn>
+</Document>

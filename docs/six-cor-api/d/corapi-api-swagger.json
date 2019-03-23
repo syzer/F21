@@ -1,0 +1,2717 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is the release candidate version of the \"Swiss Corporate API\" specification.\n",
+    "version" : "1.0.0.2-SNAPSHOT",
+    "title" : "Swiss Corporate API",
+    "contact" : {
+      "name" : "SIX Group",
+      "email" : "swisscorpapi@six-group.com",
+      "url" : "https://www.six-group.com/"
+    }
+  },
+  "host" : "tbd.six-group.com",
+  "basePath" : "/api/bankingservices/corporate/v1",
+  "tags" : [ {
+    "name" : "payments",
+    "description" : "**payment initiation submission**\nPayment Initiation Service - third party payment instruction submission\n"
+  }, {
+    "name" : "accounts",
+    "description" : "**account information**\nAccount Information Service - third party access to bank account data\n"
+  }, {
+    "name" : "iso20022",
+    "description" : "**iso20022 xml**\n\"SPSSTMT\": Transport XML account statements & \"SPSPMTS\": Transport XML payment initiations\n"
+  }, {
+    "name" : "directory",
+    "description" : "**participant information**\nInformation about participating parties. (SCOPE: SIX)\n"
+  }, {
+    "name" : "consents",
+    "description" : "**consent information**\nInformation about granted consents.\n"
+  }, {
+    "name" : "oauth",
+    "description" : "**oauth**\nOAuth endpoint\n"
+  }, {
+    "name" : "diagnostics",
+    "description" : "**diagnostics**\nDiagnostics endpoint\n"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/payments" : {
+      "post" : {
+        "tags" : [ "payments" ],
+        "summary" : "Submit payment instructions",
+        "operationId" : "submitPaymentInstructions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        }, {
+          "$ref" : "#/parameters/psu_ip_in_header"
+        }, {
+          "$ref" : "#/parameters/psu_user_agent_in_header"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Payment instruction details as defined by data model.\n",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/paymentSubmissionRequest"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created.",
+            "headers" : {
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of the submitted payment submission message. Add /status for the status report."
+              },
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/payments/{submissionId}" : {
+      "get" : {
+        "tags" : [ "payments" ],
+        "summary" : "Retrieve a payment submission",
+        "operationId" : "retrievePaymentSubmission",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_submissionId"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The original payment submission",
+            "schema" : {
+              "$ref" : "#/definitions/paymentSubmissionRequest"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/payments/{submissionId}/status" : {
+      "get" : {
+        "tags" : [ "payments" ],
+        "summary" : "Retrieve payment submission status information",
+        "operationId" : "retrievePaymentSubmissionStatus",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_submissionId"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Status information for the payment submission",
+            "schema" : {
+              "$ref" : "#/definitions/paymentSubmissionStatus"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/accounts" : {
+      "get" : {
+        "tags" : [ "accounts" ],
+        "summary" : "Retrieve list of authorized accounts",
+        "operationId" : "requestAccountList",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns a list of authorized accounts.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/accountItem"
+              }
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}" : {
+      "get" : {
+        "tags" : [ "accounts" ],
+        "summary" : "Retrieve information about a single specific account",
+        "operationId" : "requestAccountDetails",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_accountId"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the details of an account.",
+            "schema" : {
+              "$ref" : "#/definitions/accountItem"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/balance" : {
+      "get" : {
+        "tags" : [ "accounts" ],
+        "summary" : "Retrieve account balance information",
+        "operationId" : "requestAccountBalance",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_accountId"
+        }, {
+          "$ref" : "#/parameters/query_date"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "description" : "Retrieve account balance information.\n* Returns the intraday booked balance (ITBD), if called without a date.\n* Returns the intraday booked balance (ITBD), if called for the current date.\n* Returns the closing booked balance (CLBD), if called for a past date.",
+        "responses" : {
+          "200" : {
+            "description" : "Returns account balance information.",
+            "schema" : {
+              "$ref" : "#/definitions/accountBalanceItem"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/transactions" : {
+      "get" : {
+        "tags" : [ "accounts" ],
+        "summary" : "Retrieve transactions of a specific account",
+        "operationId" : "requestAccountTransactions",
+        "description" : "* Returns the transaction list of the current day, if called without a date. * Returns the transaction list for a specific day, if called for a past date. In case the specified day has not yet been finalized, the response will be a 404 error.\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_accountId"
+        }, {
+          "$ref" : "#/parameters/query_date"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns transactions of an account.",
+            "schema" : {
+              "$ref" : "#/definitions/accountTransactionReport"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/iso20022/payments" : {
+      "post" : {
+        "tags" : [ "iso20022" ],
+        "summary" : "Submit an ISO20022 XML payment instruction (PAIN.001)",
+        "description" : "Submit an ISO20022 XML PAIN.001 payment instruction.\nThe submitted payment instruction must conform to the XML Schema and Implementation Guidelines defined by Swiss Payment Standards;\nsee: https://www.six-interbank-clearing.com/en/home/standardization/iso-payments/customer-bank/implementation-guidelines.html\n",
+        "operationId" : "submitIso20022PaymentInstruction",
+        "consumes" : [ "application/xml" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        }, {
+          "$ref" : "#/parameters/psu_ip_in_header"
+        }, {
+          "$ref" : "#/parameters/psu_user_agent_in_header"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Payment instruction details as defined by data model.\n",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created.",
+            "headers" : {
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of the submitted ISO20022 XML PAIN.001 message. Add /status for the PAIN.002 status report."
+              },
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/iso20022/payments/{submissionId}" : {
+      "get" : {
+        "tags" : [ "iso20022" ],
+        "summary" : "Retrieve the submitted ISO20022 XML PAIN.001 message.",
+        "operationId" : "retrieveIso20022PaymentInstruction",
+        "produces" : [ "application/xml" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_submissionId"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the submitted ISO20022 XML PAIN.001 message",
+            "schema" : {
+              "type" : "file"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/iso20022/payments/{submissionId}/status" : {
+      "get" : {
+        "tags" : [ "iso20022" ],
+        "summary" : "Retrieve ISO20022 XML status report (PAIN.002) of a payment instruction",
+        "description" : "Retrieve the XML ISO20022 pain.002 status report.\nThe returned status report must conform to the XML Schema and Implementation Guidelines defined by Swiss Payment Standards;\nsee: https://www.six-interbank-clearing.com/en/home/standardization/iso-payments/customer-bank/implementation-guidelines.html\n",
+        "operationId" : "retrieveIso20022PaymentInstructionStatusReport",
+        "produces" : [ "application/xml" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_submissionId"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the ISO20022 XML PAIN.002 status report of a payment instruction",
+            "schema" : {
+              "type" : "file"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/iso20022/statements" : {
+      "get" : {
+        "tags" : [ "iso20022" ],
+        "summary" : "Retrieve a list of resource links to account statements (CAMT.053)",
+        "description" : "Retrieve resources links to available account statements.\nThe returned account statements must conform to the XML Schema and Implementation Guidelines defined by Swiss Payment Standards;\nsee: https://www.six-interbank-clearing.com/en/home/standardization/iso-payments/customer-bank/implementation-guidelines.html\n",
+        "operationId" : "retrieveIso20022AccountStatementIds",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns a collection of references to account statements",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/iso20022ReportReference"
+              }
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/iso20022/statements/{reportId}" : {
+      "get" : {
+        "tags" : [ "iso20022" ],
+        "summary" : "Retrieves the designated ISO20022 XML CAMT document.",
+        "operationId" : "retrieveIso20022AccountStatement",
+        "produces" : [ "application/xml" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/path_reportId"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the selected ISO20022 XML CAMT document.",
+            "schema" : {
+              "type" : "file"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/consents" : {
+      "get" : {
+        "tags" : [ "consents" ],
+        "summary" : "Retrieve a list of consents",
+        "description" : "The consents endpoint allows the client (e.g., a third party provider) to query the consents for a given corporate user. The provider (e.g., a financial institution) must return the consents linked with the access token supplied with the request.\n",
+        "operationId" : "retrieveConsents",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of consents",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/consentItem"
+              }
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/directory/clients" : {
+      "get" : {
+        "tags" : [ "directory" ],
+        "summary" : "Retrieve a list of all registered clients (e.g., third party providers)",
+        "description" : "Returns a list of clients with information regarding software and supported use cases. (SCOPE: SIX)\n",
+        "operationId" : "retrieveClients",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/query_participant_status"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of clients",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/directoryClientItem"
+              }
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/directory/clients/{clientId}" : {
+      "get" : {
+        "tags" : [ "directory" ],
+        "summary" : "Retrieve the information for a registered client (e.g. third party provider)",
+        "description" : "Returns information regarding software and supported use cases of a client. (SCOPE: SIX)\n",
+        "operationId" : "retrieveClientDetail",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/path_clientId"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Information for a client",
+            "schema" : {
+              "$ref" : "#/definitions/directoryClientItem"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/directory/providers" : {
+      "get" : {
+        "tags" : [ "directory" ],
+        "summary" : "Retrieve a list of all registered providers (e.g., financial institutions)",
+        "description" : "Returns a list of providers with information regarding software and supported use cases. (SCOPE: SIX)\n",
+        "operationId" : "retrieveProviders",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/query_participant_status"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of providers",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/directoryProviderItem"
+              }
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/directory/providers/{providerId}" : {
+      "get" : {
+        "tags" : [ "directory" ],
+        "summary" : "Retrieve the informatoin for a registered provider (e.g., financial institutions)",
+        "description" : "Returns information regarding software and supported use cases of a provider. (SCOPE: SIX)\n",
+        "operationId" : "retrieveProviderDetail",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/path_providerId"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Information for a provider",
+            "schema" : {
+              "$ref" : "#/definitions/directoryProviderItem"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/oauth/token" : {
+      "post" : {
+        "tags" : [ "oauth" ],
+        "summary" : "Get the OAuth access and refresh token",
+        "description" : "Returns the OAuth access and refresh token for the specified client and target\n",
+        "operationId" : "oauthToken",
+        "produces" : [ "application/json" ],
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "parameters" : [ {
+          "name" : "grant_type",
+          "in" : "formData",
+          "type" : "string",
+          "enum" : [ "authorization_code", "refresh_token" ],
+          "required" : true,
+          "description" : "either authorization_code or refresh_token"
+        }, {
+          "name" : "code",
+          "in" : "formData",
+          "type" : "string",
+          "description" : "authorization code if applicable"
+        }, {
+          "name" : "refresh_token",
+          "in" : "formData",
+          "type" : "string",
+          "description" : "refresh token if applicable"
+        }, {
+          "name" : "redirect_uri",
+          "in" : "formData",
+          "type" : "string",
+          "description" : "original redirect uri if applicable"
+        }, {
+          "name" : "client_id",
+          "in" : "formData",
+          "type" : "string",
+          "required" : true,
+          "description" : "client id"
+        }, {
+          "$ref" : "#/parameters/targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/agent_in_header"
+        }, {
+          "$ref" : "#/parameters/psu_ip_in_header"
+        }, {
+          "$ref" : "#/parameters/psu_user_agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OAuth token response",
+            "schema" : {
+              "$ref" : "#/definitions/oauthTokenResponse"
+            },
+            "headers" : {
+              "X-Correlation-ID" : {
+                "type" : "string",
+                "description" : "Reflects the ID (set by the caller) from the request."
+              },
+              "Cache-Control" : {
+                "type" : "string",
+                "description" : "must be: no-store",
+                "default" : "no-store"
+              },
+              "Pragma" : {
+                "type" : "string",
+                "description" : "must be: no-cache",
+                "default" : "no-cache"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/standard400"
+          },
+          "401" : {
+            "$ref" : "#/responses/standard401"
+          },
+          "403" : {
+            "$ref" : "#/responses/standard403"
+          },
+          "404" : {
+            "$ref" : "#/responses/standard404"
+          },
+          "405" : {
+            "$ref" : "#/responses/standard405"
+          },
+          "500" : {
+            "$ref" : "#/responses/standard500"
+          }
+        }
+      }
+    },
+    "/healthcheck" : {
+      "get" : {
+        "tags" : [ "diagnostics" ],
+        "summary" : "Returns all specified request headers and additional diagnostic information",
+        "operationId" : "healthCheckGet",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/healthcheck_authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_agent_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_psu_ip_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_psu_user_agent_in_header"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Health Check Response",
+            "schema" : {
+              "$ref" : "#/definitions/healthCheckResponse"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "diagnostics" ],
+        "summary" : "Returns all specified request headers, the request body and additional diagnostic information",
+        "operationId" : "healthCheckPost",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "$ref" : "#/parameters/healthcheck_authorization_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_agent_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_targetid_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_clientid_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_correlation_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_psu_ip_in_header"
+        }, {
+          "$ref" : "#/parameters/healthcheck_psu_user_agent_in_header"
+        }, {
+          "name" : "body",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Health Check Response",
+            "schema" : {
+              "$ref" : "#/definitions/healthCheckResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters" : {
+    "path_clientId" : {
+      "name" : "clientId",
+      "in" : "path",
+      "type" : "string",
+      "description" : "id of the client",
+      "required" : true,
+      "maxLength" : 30
+    },
+    "path_providerId" : {
+      "name" : "providerId",
+      "in" : "path",
+      "type" : "string",
+      "description" : "id of the provider",
+      "required" : true,
+      "maxLength" : 30
+    },
+    "path_submissionId" : {
+      "name" : "submissionId",
+      "in" : "path",
+      "type" : "string",
+      "description" : "id of payment submission",
+      "required" : true,
+      "maxLength" : 30
+    },
+    "path_reportId" : {
+      "name" : "reportId",
+      "in" : "path",
+      "type" : "string",
+      "description" : "id of report",
+      "required" : true,
+      "maxLength" : 30
+    },
+    "path_accountId" : {
+      "name" : "accountId",
+      "in" : "path",
+      "type" : "string",
+      "description" : "id of account",
+      "required" : true,
+      "maxLength" : 30
+    },
+    "query_date" : {
+      "name" : "date",
+      "in" : "query",
+      "type" : "string",
+      "format" : "date",
+      "description" : "The date to query, formatted as yyyy-mm-dd.",
+      "default" : "the current date"
+    },
+    "query_participant_status" : {
+      "name" : "status",
+      "in" : "query",
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE", "SUSPENDED", "ONBOARDING" ],
+      "default" : "ACTIVE",
+      "required" : false,
+      "description" : "status=ACTIVE returns only active clients"
+    },
+    "targetid_in_header" : {
+      "in" : "header",
+      "name" : "X-CorAPI-Target-ID",
+      "type" : "string",
+      "description" : "ID that identifies the provider (e.g., a financial institution). (SCOPE: SIX)",
+      "required" : true
+    },
+    "clientid_in_header" : {
+      "in" : "header",
+      "name" : "X-CorAPI-Client-ID",
+      "type" : "string",
+      "description" : "ID of the client forwarded to the provider. (SCOPE: FI)",
+      "required" : true
+    },
+    "authorization_in_header" : {
+      "in" : "header",
+      "name" : "Authorization",
+      "type" : "string",
+      "description" : "Bearer followed by a base64 encoded OAuth access token",
+      "required" : true
+    },
+    "correlation_in_header" : {
+      "in" : "header",
+      "name" : "X-Correlation-ID",
+      "type" : "string",
+      "description" : "Unique ID (defined by the caller) which will be reflected back in the response.",
+      "required" : true
+    },
+    "agent_in_header" : {
+      "in" : "header",
+      "name" : "User-Agent",
+      "type" : "string",
+      "description" : "Name and version of the of the Client software",
+      "required" : true
+    },
+    "psu_ip_in_header" : {
+      "in" : "header",
+      "name" : "X-PSU-IP-Address",
+      "type" : "string",
+      "description" : "IP address of the user initiating the operation",
+      "required" : true
+    },
+    "psu_user_agent_in_header" : {
+      "in" : "header",
+      "name" : "X-PSU-User-Agent",
+      "type" : "string",
+      "description" : "User agent of the user initiating the operation",
+      "required" : true
+    },
+    "healthcheck_targetid_in_header" : {
+      "in" : "header",
+      "name" : "X-CorAPI-Target-ID",
+      "type" : "string",
+      "description" : "ID of the target, e.g., a financial institution. (SCOPE: SIX)",
+      "required" : false
+    },
+    "healthcheck_authorization_in_header" : {
+      "in" : "header",
+      "name" : "Authorization",
+      "type" : "string",
+      "description" : "Bearer followed by a base64 encoded OAuth access token",
+      "required" : false
+    },
+    "healthcheck_clientid_in_header" : {
+      "in" : "header",
+      "name" : "X-CorAPI-Client-ID",
+      "type" : "string",
+      "description" : "ID of the client forwarded to the provider. (SCOPE: FI)",
+      "required" : false
+    },
+    "healthcheck_correlation_in_header" : {
+      "in" : "header",
+      "name" : "X-Correlation-ID",
+      "type" : "string",
+      "description" : "Unique ID (defined by the caller) which will be reflected back in the response.",
+      "required" : false
+    },
+    "healthcheck_agent_in_header" : {
+      "in" : "header",
+      "name" : "User-Agent",
+      "type" : "string",
+      "description" : "Name and version of the of the client software",
+      "required" : false
+    },
+    "healthcheck_psu_ip_in_header" : {
+      "in" : "header",
+      "name" : "X-PSU-IP-Address",
+      "type" : "string",
+      "description" : "IP address of the user initiating the operation",
+      "required" : false
+    },
+    "healthcheck_psu_user_agent_in_header" : {
+      "in" : "header",
+      "name" : "X-PSU-User-Agent",
+      "type" : "string",
+      "description" : "User of the client software",
+      "required" : false
+    }
+  },
+  "definitions" : {
+    "paymentSubmissionRequest" : {
+      "title" : "Payment Submission Request",
+      "type" : "object",
+      "required" : [ "messageId", "initiatingPartyId", "debtorAccount", "bookingInstruction", "transactions", "requestedExecutionDate" ],
+      "properties" : {
+        "messageId" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "eb6305c91f7f49deaed016487c27b42d"
+        },
+        "initiatingPartyId" : {
+          "type" : "string",
+          "maxLength" : 32,
+          "example" : "TPP01746"
+        },
+        "requestedExecutionDate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2018-04-07"
+        },
+        "debtorAccount" : {
+          "$ref" : "#/definitions/paymentIbanAccount"
+        },
+        "bookingInstruction" : {
+          "$ref" : "#/definitions/paymentBookingInstruction"
+        },
+        "transactions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/paymentInstructionItem"
+          }
+        }
+      }
+    },
+    "paymentInstructionItem" : {
+      "title" : "Payment Instruction Item",
+      "type" : "object",
+      "required" : [ "instructionId", "endToEndId", "instructedAmount" ],
+      "properties" : {
+        "instructionId" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "INSTR-001"
+        },
+        "endToEndId" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "ENDTOENDID-001"
+        },
+        "instructedAmount" : {
+          "$ref" : "#/definitions/paymentCurrencyAmount"
+        },
+        "ibanDetails" : {
+          "$ref" : "#/definitions/paymentIBANDetail"
+        },
+        "isrDetails" : {
+          "$ref" : "#/definitions/paymentISRDetail"
+        },
+        "otherDetails" : {
+          "$ref" : "#/definitions/paymentOtherDetail"
+        }
+      }
+    },
+    "paymentIBANDetail" : {
+      "title" : "Payment IBAN Detail",
+      "type" : "object",
+      "required" : [ "creditorAccount", "creditor" ],
+      "properties" : {
+        "sepaIndicator" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "creditorAccount" : {
+          "$ref" : "#/definitions/paymentIbanAccount"
+        },
+        "creditorAgent" : {
+          "$ref" : "#/definitions/paymentCreditorAgent"
+        },
+        "creditor" : {
+          "$ref" : "#/definitions/paymentCreditor"
+        },
+        "chargeBearer" : {
+          "$ref" : "#/definitions/paymentChargeBearerMethod"
+        },
+        "remittanceReference" : {
+          "$ref" : "#/definitions/paymentIbanRemittanceReference"
+        },
+        "remittanceInformation" : {
+          "type" : "string",
+          "example" : "Verguetung Juli"
+        }
+      }
+    },
+    "paymentISRDetail" : {
+      "title" : "Payment ISR Detail",
+      "type" : "object",
+      "properties" : {
+        "creditorAccount" : {
+          "$ref" : "#/definitions/paymentOtherAccount"
+        },
+        "creditor" : {
+          "$ref" : "#/definitions/paymentCreditor"
+        },
+        "remittanceReference" : {
+          "$ref" : "#/definitions/paymentIsrRemittanceReference"
+        }
+      }
+    },
+    "paymentOtherDetail" : {
+      "title" : "Payment Other Detail",
+      "type" : "object",
+      "properties" : {
+        "creditorAccount" : {
+          "$ref" : "#/definitions/paymentOtherAccount"
+        },
+        "creditorAgent" : {
+          "$ref" : "#/definitions/paymentCreditorAgent"
+        },
+        "creditor" : {
+          "$ref" : "#/definitions/paymentCreditor"
+        },
+        "chargeBearer" : {
+          "$ref" : "#/definitions/paymentChargeBearerMethod"
+        },
+        "remittanceReference" : {
+          "$ref" : "#/definitions/paymentOtherRemittanceReference"
+        }
+      }
+    },
+    "paymentCreditor" : {
+      "title" : "Payment Creditor",
+      "type" : "object",
+      "required" : [ "name", "postalAddress" ],
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "postalAddress" : {
+          "$ref" : "#/definitions/commonStructuredOrUnstructuredAddress"
+        }
+      }
+    },
+    "paymentChargeBearerMethod" : {
+      "title" : "Payment Charge Bearer Method",
+      "type" : "string",
+      "enum" : [ "DEBT", "CRED", "SHAR", "SLEV" ],
+      "example" : "SHAR"
+    },
+    "paymentBookingInstruction" : {
+      "title" : "Payment Booking Instruction",
+      "type" : "string",
+      "enum" : [ "SINGLEBOOKING_SIA", "SINGLEBOOKING_NOA", "BATCHBOOKING_SALA_NOA", "BATCHBOOKING_SALA_CND", "BATCHBOOKING_NOA", "BATCHBOOKING_CND", "BATCHBOOKING_CWD" ],
+      "example" : "BATCHBOOKING_SALA_CND"
+    },
+    "paymentSubmissionStatus" : {
+      "title" : "Payment Submission Status",
+      "type" : "object",
+      "properties" : {
+        "messageId" : {
+          "type" : "string",
+          "example" : "eb6305c91f7f49deaed016487c27b42d"
+        },
+        "statusCode" : {
+          "type" : "string",
+          "enum" : [ "ACCP", "RJCT", "PART" ],
+          "example" : "PART"
+        },
+        "transactions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/paymentInstructionItemStatus"
+          }
+        }
+      }
+    },
+    "paymentInstructionItemStatus" : {
+      "title" : "Payment Instruction Item Status",
+      "type" : "object",
+      "properties" : {
+        "instructionId" : {
+          "type" : "string",
+          "example" : "DNCS-20180322-IXN0-TXN0"
+        },
+        "statusCode" : {
+          "type" : "string",
+          "enum" : [ "ACCP", "RJCT" ],
+          "example" : "RJCT"
+        },
+        "reasonCode" : {
+          "type" : "string",
+          "example" : "CURR"
+        },
+        "reasonInformation" : {
+          "type" : "string",
+          "example" : "currency USD not allowed for payment type ISR"
+        }
+      }
+    },
+    "paymentCreditorAgent" : {
+      "type" : "object",
+      "properties" : {
+        "bic" : {
+          "type" : "string",
+          "example" : "BDEMMXMM"
+        },
+        "clearingSystemMemberIdentification" : {
+          "$ref" : "#/definitions/commonClearingSystemMemberIdentification"
+        }
+      }
+    },
+    "paymentIbanAccount" : {
+      "title" : "Payment Account",
+      "type" : "object",
+      "required" : [ "type", "identification" ],
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "allowed account identification type for the creditor account depends on the payment type. The debtor account must always be an IBAN.",
+          "enum" : [ "IBAN" ]
+        },
+        "identification" : {
+          "type" : "string",
+          "maxLength" : 34,
+          "example" : "CH9300762011623852957",
+          "pattern" : "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+        }
+      }
+    },
+    "paymentOtherAccount" : {
+      "title" : "Payment Account",
+      "type" : "object",
+      "required" : [ "type", "identification" ],
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Account identification type. The debtor account must always be an IBAN.",
+          "enum" : [ "OTHER" ]
+        },
+        "identification" : {
+          "type" : "string",
+          "maxLength" : 34,
+          "example" : "762011623852957"
+        }
+      }
+    },
+    "balanceCurrencyAmount" : {
+      "title" : "Balance Currency-Amount",
+      "type" : "object",
+      "required" : [ "currency", "amount" ],
+      "properties" : {
+        "currency" : {
+          "type" : "string",
+          "example" : "CHF"
+        },
+        "amount" : {
+          "type" : "string",
+          "pattern" : "-?[0-9]{1,12}([.][0-9]{1,5})?",
+          "maxLength" : 18,
+          "example" : "10.25"
+        }
+      }
+    },
+    "paymentCurrencyAmount" : {
+      "title" : "Payment Currency-Amount",
+      "type" : "object",
+      "required" : [ "currency", "amount" ],
+      "properties" : {
+        "currency" : {
+          "type" : "string",
+          "example" : "CHF"
+        },
+        "amount" : {
+          "type" : "string",
+          "pattern" : "[0-9]{1,12}([.][0-9]{1,5})?",
+          "maxLength" : 18,
+          "example" : "10.25"
+        }
+      }
+    },
+    "paymentIbanRemittanceReference" : {
+      "title" : "Payment Remittance Reference",
+      "description" : "either remittanceReference or remittanceInformation must be set",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "SCOR", "QRR" ]
+        },
+        "reference" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "210000000003139471430009017"
+        }
+      }
+    },
+    "paymentIsrRemittanceReference" : {
+      "title" : "Payment Remittance Reference",
+      "description" : "either remittanceReference or remittanceInformation must be set",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "ISR" ]
+        },
+        "reference" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "210000000003139471430009017"
+        }
+      }
+    },
+    "paymentOtherRemittanceReference" : {
+      "title" : "Payment Remittance Reference",
+      "description" : "either remittanceReference or remittanceInformation must be set",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "SCOR" ]
+        },
+        "reference" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "210000000003139471430009017"
+        }
+      }
+    },
+    "paymentRemittanceInformation" : {
+      "title" : "Payment Remittance Information",
+      "description" : "either remittanceReference or remittanceInformation must be set",
+      "type" : "string",
+      "maxLength" : 140,
+      "example" : "Rechnung Nr. 408"
+    },
+    "paymentEndToEndId" : {
+      "title" : "Payment End to End ID",
+      "description" : "Unique debtor (payee) reference.",
+      "type" : "string",
+      "maxLength" : 35,
+      "example" : "ENDTOENDID-001"
+    },
+    "accountItem" : {
+      "title" : "Account Information Item",
+      "type" : "object",
+      "required" : [ "id", "account", "currency", "designation" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "550e8400-e29b-11d4-a716-446655440000"
+        },
+        "account" : {
+          "$ref" : "#/definitions/paymentIbanAccount"
+        },
+        "currency" : {
+          "type" : "string",
+          "example" : "CHF"
+        },
+        "designation" : {
+          "type" : "string",
+          "maxLength" : 140,
+          "example" : "Firmenkonto"
+        },
+        "_links" : {
+          "type" : "object",
+          "description" : "Contains the paths to additional resources for specific account (e.g. path to transactions resource)",
+          "properties" : {
+            "self" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400-e29b-11d4-a716-446655440000"
+            },
+            "balance" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+            },
+            "transactions" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+            }
+          }
+        }
+      }
+    },
+    "accountBalanceItem" : {
+      "title" : "Account Balance Item",
+      "type" : "object",
+      "required" : [ "date", "balanceType", "balance" ],
+      "properties" : {
+        "date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2010-02-15"
+        },
+        "balanceType" : {
+          "type" : "string",
+          "enum" : [ "ITBD", "CLBD" ],
+          "example" : "CLBD"
+        },
+        "balance" : {
+          "$ref" : "#/definitions/balanceCurrencyAmount"
+        },
+        "_links" : {
+          "description" : "contains the paths to additional resources for specific account (e.g. path to transactions resource)",
+          "properties" : {
+            "self" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+            },
+            "account" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400-e29b-11d4-a716-446655440000"
+            },
+            "transactions" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+            }
+          }
+        }
+      }
+    },
+    "accountTransactionReport" : {
+      "title" : "Account Transaction Report",
+      "type" : "object",
+      "required" : [ "iban", "entries" ],
+      "properties" : {
+        "iban" : {
+          "type" : "string",
+          "example" : "CH5481230000001998736"
+        },
+        "designation" : {
+          "type" : "string",
+          "example" : "Checking Account"
+        },
+        "entries" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/accountTransactionEntry"
+          }
+        },
+        "_links" : {
+          "type" : "object",
+          "properties" : {
+            "self" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400e29b11d4a716446655440000/statements"
+            },
+            "account" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400e29b11d4a716446655440000"
+            },
+            "balance" : {
+              "type" : "string",
+              "example" : "/accounts/550e8400e29b11d4a716446655440000/balance"
+            }
+          }
+        }
+      }
+    },
+    "accountTransactionEntry" : {
+      "title" : "Account Transaction Entry",
+      "type" : "object",
+      "required" : [ "entryId", "transactionType", "bookingDate", "valueDate", "amount", "bankTransactionCode" ],
+      "properties" : {
+        "entryId" : {
+          "type" : "string",
+          "example" : "ENTRY123456789"
+        },
+        "transactionType" : {
+          "$ref" : "#/definitions/accountTransactionTransactionType"
+        },
+        "entryReference" : {
+          "type" : "string",
+          "example" : 1.0001628E7
+        },
+        "entryReferenceInternalId" : {
+          "type" : "string",
+          "example" : "010001628"
+        },
+        "reversalIndicator" : {
+          "type" : "boolean"
+        },
+        "bookingDate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2018-10-29"
+        },
+        "valueDate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2018-10-29"
+        },
+        "amount" : {
+          "$ref" : "#/definitions/paymentCurrencyAmount"
+        },
+        "instructedAmount" : {
+          "$ref" : "#/definitions/accountTransactionInstructedAmount"
+        },
+        "totalChargesAmount" : {
+          "$ref" : "#/definitions/accountTransactionItemCharges"
+        },
+        "bankTransactionCode" : {
+          "$ref" : "#/definitions/accountTransactionBankTransactionCode"
+        },
+        "additionalEntryInformation" : {
+          "type" : "string"
+        },
+        "transactions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/accountTransactionItem"
+          }
+        }
+      }
+    },
+    "accountTransactionItem" : {
+      "title" : "Account Transaction Item",
+      "type" : "object",
+      "required" : [ "transactionId", "transactionType", "amount", "currency" ],
+      "properties" : {
+        "transactionId" : {
+          "type" : "string",
+          "example" : "TX12345A987"
+        },
+        "transactionType" : {
+          "$ref" : "#/definitions/accountTransactionTransactionType"
+        },
+        "endToEndId" : {
+          "type" : "string",
+          "example" : "ENDTOENDID-01"
+        },
+        "bankTransactionCode" : {
+          "$ref" : "#/definitions/accountTransactionBankTransactionCode"
+        },
+        "amount" : {
+          "$ref" : "#/definitions/paymentCurrencyAmount"
+        },
+        "instructedAmount" : {
+          "$ref" : "#/definitions/accountTransactionInstructedAmount"
+        },
+        "totalChargesAmount" : {
+          "$ref" : "#/definitions/accountTransactionItemCharges"
+        },
+        "counterparty" : {
+          "$ref" : "#/definitions/accountTransactionCounterparty"
+        },
+        "remittanceInformation" : {
+          "$ref" : "#/definitions/paymentRemittanceInformation"
+        },
+        "remittanceReference" : {
+          "$ref" : "#/definitions/accountTransactionRemittanceReference"
+        },
+        "additionalTransactionInformation" : {
+          "type" : "string"
+        }
+      }
+    },
+    "accountTransactionItemCharges" : {
+      "title" : "Account Transaction Item Charges",
+      "type" : "object",
+      "required" : [ "amount", "currency" ],
+      "properties" : {
+        "amount" : {
+          "type" : "string",
+          "pattern" : "[0-9]{1,12}([.][0-9]{1,5})?",
+          "maxLength" : 18,
+          "example" : "10.25"
+        },
+        "currency" : {
+          "type" : "string",
+          "example" : "CHF"
+        },
+        "chargeRecords" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/accountTransactionItemChargesRecord"
+          }
+        }
+      }
+    },
+    "accountTransactionItemChargesRecord" : {
+      "title" : "Account Transaction Item Charges Record",
+      "type" : "object",
+      "properties" : {
+        "amount" : {
+          "type" : "string",
+          "pattern" : "[0-9]{1,12}([.][0-9]{1,5})?",
+          "maxLength" : 18,
+          "example" : "10.25"
+        },
+        "currency" : {
+          "type" : "string",
+          "maxLength" : 3,
+          "example" : "CHF"
+        },
+        "type" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "Some type of charge"
+        },
+        "chargesIncludedIndicator" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "accountTransactionCounterparty" : {
+      "title" : "Account Transaction Counterparty",
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "Hans Muster"
+        },
+        "postalAddress" : {
+          "$ref" : "#/definitions/commonStructuredOrUnstructuredAddress"
+        },
+        "account" : {
+          "$ref" : "#/definitions/accountTransactionCounterpartyAccount"
+        },
+        "agent" : {
+          "$ref" : "#/definitions/accountTransactionCounterpartyAgent"
+        }
+      }
+    },
+    "accountTransactionCounterpartyAgent" : {
+      "title" : "Account Transaction Counterparty Agent",
+      "type" : "object",
+      "properties" : {
+        "bic" : {
+          "type" : "string"
+        },
+        "clearingSystemMemberIdentification" : {
+          "$ref" : "#/definitions/commonClearingSystemMemberIdentification"
+        }
+      }
+    },
+    "accountTransactionInstructedAmount" : {
+      "title" : "Account Transaction Instructed Amount",
+      "type" : "object",
+      "required" : [ "currency", "amount", "sourceCurrency", "targetCurrency" ],
+      "properties" : {
+        "amount" : {
+          "type" : "string",
+          "pattern" : "[0-9]{1,12}([.][0-9]{1,5})?",
+          "maxLength" : 18,
+          "example" : "10.25"
+        },
+        "sourceCurrency" : {
+          "type" : "string",
+          "example" : "CHF"
+        },
+        "targetCurrency" : {
+          "type" : "string",
+          "example" : "USD"
+        },
+        "exchangeRate" : {
+          "type" : "string",
+          "example" : "0.957"
+        },
+        "exchangeIndicator" : {
+          "type" : "string",
+          "example" : "MULT"
+        }
+      }
+    },
+    "accountTransactionBankTransactionCode" : {
+      "title" : "Account Transaction Bank Transaction Code",
+      "type" : "object",
+      "required" : [ "domainCode", "familyCode", "subFamilyCode" ],
+      "properties" : {
+        "domainCode" : {
+          "type" : "string",
+          "example" : "PMNT"
+        },
+        "familyCode" : {
+          "type" : "string",
+          "example" : "RCDT"
+        },
+        "subFamilyCode" : {
+          "type" : "string",
+          "example" : "DMCT"
+        }
+      }
+    },
+    "accountTransactionTransactionType" : {
+      "title" : "Account Transaction Transaction Type",
+      "type" : "string",
+      "enum" : [ "CRDT", "DBIT" ],
+      "example" : "CRDT"
+    },
+    "accountTransactionCounterpartyAccount" : {
+      "title" : "Account Transaction Counterparty Account",
+      "type" : "object",
+      "required" : [ "type", "identification" ],
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "IBAN", "OTHER" ]
+        },
+        "identification" : {
+          "type" : "string",
+          "maxLength" : 34,
+          "example" : "CH9300762011623852957"
+        }
+      }
+    },
+    "accountTransactionRemittanceReference" : {
+      "title" : "Account Transaction Remittance Reference",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "SCOR", "ISR", "QRR" ]
+        },
+        "reference" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "210000000003139471430009017"
+        }
+      }
+    },
+    "consentItem" : {
+      "title" : "Consent Item",
+      "type" : "object",
+      "properties" : {
+        "useCase" : {
+          "type" : "string",
+          "example" : "ais"
+        },
+        "accounts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/consentAccountItem"
+          }
+        }
+      }
+    },
+    "consentAccountItem" : {
+      "title" : "Consent Account Item",
+      "type" : "object",
+      "required" : [ "accountId", "iban" ],
+      "properties" : {
+        "accountId" : {
+          "type" : "string",
+          "example" : "13579"
+        },
+        "iban" : {
+          "type" : "string",
+          "example" : "CH123131231231231"
+        },
+        "currency" : {
+          "type" : "string",
+          "example" : "CHF"
+        },
+        "designation" : {
+          "type" : "string",
+          "example" : "Savings ABC"
+        },
+        "allowedCurrencies" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "CHF"
+          }
+        }
+      }
+    },
+    "directoryClientItem" : {
+      "title" : "Directory Client Item",
+      "allOf" : [ {
+        "type" : "object",
+        "properties" : {
+          "clientId" : {
+            "type" : "string",
+            "example" : "1234"
+          },
+          "clientConsentBackendUrl" : {
+            "type" : "string",
+            "example" : "https://www.acme.com/consent"
+          },
+          "clientRedirectionEndpointUrl" : {
+            "type" : "string",
+            "example" : "https://www.acme.com/start"
+          }
+        },
+        "required" : [ "clientId", "clientConsentBackendUrl", "clientRedirectionEndpointUrl" ]
+      }, {
+        "$ref" : "#/definitions/directoryParticipantItem"
+      } ]
+    },
+    "directoryProviderItem" : {
+      "title" : "Directory Provider Item",
+      "allOf" : [ {
+        "type" : "object",
+        "properties" : {
+          "providerId" : {
+            "type" : "string",
+            "example" : "1234"
+          },
+          "providerAuthEndpointUrl" : {
+            "type" : "string",
+            "example" : "https://www.acme.com/oauth/authorize"
+          }
+        },
+        "required" : [ "providerId", "providerAuthEndpointUrl" ]
+      }, {
+        "$ref" : "#/definitions/directoryParticipantItem"
+      } ]
+    },
+    "directoryParticipantItem" : {
+      "title" : "Directory Participant Item",
+      "type" : "object",
+      "properties" : {
+        "companyName" : {
+          "type" : "string",
+          "maxLength" : 50,
+          "example" : "ACME"
+        },
+        "contact" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/directoryContact"
+          },
+          "example" : [ {
+            "type" : "BUSINESS",
+            "designation" : "Account and Payments Services",
+            "emailAddress" : "business-contact@acme.com"
+          }, {
+            "type" : "TECHNICAL",
+            "emailAddress" : "technical-contact@acme.com",
+            "phone" : "+41 58 999 9999"
+          } ]
+        },
+        "companyLogo" : {
+          "$ref" : "#/definitions/directoryMultisizeImageReference"
+        },
+        "marketingImage" : {
+          "$ref" : "#/definitions/directoryImageReference"
+        },
+        "companyUrl" : {
+          "type" : "string",
+          "example" : "https://www.acme.com"
+        },
+        "marketingDescription" : {
+          "$ref" : "#/definitions/directoryMarketingDescription"
+        },
+        "shortDescription" : {
+          "$ref" : "#/definitions/directoryShortDescription"
+        },
+        "status" : {
+          "$ref" : "#/definitions/directoryParticipantStatus"
+        },
+        "registrationDate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2018-10-11"
+        },
+        "lastModified" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2018-11-11T12:39:23+01:00"
+        },
+        "software" : {
+          "$ref" : "#/definitions/directorySoftwareDescription"
+        },
+        "useCases" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/directoryUseCaseItem"
+          },
+          "minItems" : 0
+        }
+      },
+      "required" : [ "companyName", "contact", "companyLogo", "companyUrl", "marketingDescription", "shortDescription", "status", "registrationDate", "lastModified", "software" ]
+    },
+    "directoryContact" : {
+      "title" : "Directory Contact",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "BUSINESS", "TECHNICAL" ]
+        },
+        "designation" : {
+          "type" : "string",
+          "maxLength" : 80
+        },
+        "emailAddress" : {
+          "type" : "string",
+          "format" : "email",
+          "maxLength" : 50
+        },
+        "phone" : {
+          "type" : "string",
+          "maxLength" : 20
+        }
+      },
+      "required" : [ "type", "emailAddress" ]
+    },
+    "directorySoftwareDescription" : {
+      "title" : "Directory Software Description",
+      "type" : "object",
+      "properties" : {
+        "productName" : {
+          "$ref" : "#/definitions/directoryProductName"
+        },
+        "manufacturer" : {
+          "type" : "string",
+          "maxLength" : 50,
+          "example" : "ACME Corp."
+        },
+        "category" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "ACCOUNTING" ]
+          },
+          "minItems" : 1,
+          "example" : [ "ACCOUNTING" ]
+        },
+        "productInfoUrl" : {
+          "type" : "string",
+          "example" : "https://acme.com/amce_accounting"
+        },
+        "productLogo" : {
+          "$ref" : "#/definitions/directoryMultisizeImageReference"
+        },
+        "marketingImage" : {
+          "$ref" : "#/definitions/directoryImageReference"
+        },
+        "marketingDescription" : {
+          "$ref" : "#/definitions/directoryMarketingDescription"
+        },
+        "shortDescription" : {
+          "$ref" : "#/definitions/directoryShortDescription"
+        }
+      },
+      "required" : [ "productName", "manufacturer", "category", "productInfoUrl", "productLogo", "marketingDescription", "shortDescription" ]
+    },
+    "directoryMarketingDescription" : {
+      "title" : "Directory Marketing Description",
+      "type" : "object",
+      "properties" : {
+        "de" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 140
+          }
+        },
+        "en" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 140
+          }
+        },
+        "fr" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 140
+          }
+        },
+        "it" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 140
+          }
+        }
+      },
+      "example" : {
+        "de" : [ "bullet1", "bullet2", "bullet3", "bullet4", "bullet5" ],
+        "en" : [ "bullet1", "bullet2", "bullet3", "bullet4", "bullet5" ],
+        "fr" : [ "bullet1", "bullet2", "bullet3", "bullet4", "bullet5" ],
+        "it" : [ "bullet1", "bullet2", "bullet3", "bullet4", "bullet5" ]
+      },
+      "required" : [ "de", "en", "fr", "it" ]
+    },
+    "directoryShortDescription" : {
+      "title" : "Directory Short Description",
+      "type" : "object",
+      "properties" : {
+        "de" : {
+          "type" : "string",
+          "maxLength" : 300
+        },
+        "en" : {
+          "type" : "string",
+          "maxLength" : 300
+        },
+        "fr" : {
+          "type" : "string",
+          "maxLength" : 300
+        },
+        "it" : {
+          "type" : "string",
+          "maxLength" : 300
+        }
+      },
+      "example" : {
+        "de" : "Kurzbeschreibung",
+        "en" : "Short description",
+        "fr" : "Description rapide",
+        "it" : "Corta descrizione"
+      },
+      "required" : [ "de", "en", "fr", "it" ]
+    },
+    "directoryUseCaseItem" : {
+      "title" : "Directory Use Case Information",
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "ais"
+        },
+        "version" : {
+          "type" : "string",
+          "example" : "v1"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ONBOARDING", "CERTIFIED" ],
+          "example" : "CERTIFIED"
+        },
+        "from" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2018-10-10T:14:00:00+02:00"
+        },
+        "until" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "9999-12-31T23:59:59+01:00"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "name", "version", "status", "from" ]
+    },
+    "directoryProductName" : {
+      "title" : "Directory Product Name",
+      "type" : "object",
+      "properties" : {
+        "de" : {
+          "type" : "string",
+          "maxLength" : 50
+        },
+        "en" : {
+          "type" : "string",
+          "maxLength" : 50
+        },
+        "fr" : {
+          "type" : "string",
+          "maxLength" : 50
+        },
+        "it" : {
+          "type" : "string",
+          "maxLength" : 50
+        }
+      },
+      "example" : {
+        "de" : "ACME Buchhaltungssoftware",
+        "en" : "ACME accounting software",
+        "fr" : "ACME software comptable",
+        "it" : "ACME software contabilità"
+      },
+      "required" : [ "de", "en", "fr", "it" ]
+    },
+    "directoryMultisizeImageReference" : {
+      "title" : "Directory Multisize Image Reference",
+      "type" : "object",
+      "properties" : {
+        "small" : {
+          "$ref" : "#/definitions/directoryImageReference"
+        },
+        "large" : {
+          "$ref" : "#/definitions/directoryImageReference"
+        }
+      },
+      "required" : [ "small", "large" ]
+    },
+    "directoryParticipantStatus" : {
+      "title" : "Directory Participant Status",
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE", "SUSPENDED", "ONBOARDING" ],
+      "example" : "ACTIVE"
+    },
+    "directoryImageReference" : {
+      "title" : "Directory Image Reference",
+      "type" : "object",
+      "properties" : {
+        "mimeType" : {
+          "type" : "string",
+          "example" : "image/png"
+        },
+        "image" : {
+          "type" : "string",
+          "format" : "byte",
+          "example" : "QUNNRQ=="
+        }
+      },
+      "required" : [ "mimeType", "image" ]
+    },
+    "iso20022ReportReference" : {
+      "title" : "ISO 20022 Report Reference",
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "CAMT53", "CAMT54" ]
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "oauthTokenResponse" : {
+      "title" : "oAuth Token Response",
+      "type" : "object",
+      "required" : [ "access_token", "token_type" ],
+      "properties" : {
+        "access_token" : {
+          "type" : "string"
+        },
+        "token_type" : {
+          "type" : "string",
+          "default" : "bearer"
+        },
+        "expires_in" : {
+          "type" : "integer",
+          "minimum" : 1
+        },
+        "refresh_token" : {
+          "type" : "string"
+        }
+      }
+    },
+    "commonClearingSystemMemberIdentification" : {
+      "title" : "Common Clearing System Member Identification",
+      "type" : "object",
+      "required" : [ "code", "memberId" ],
+      "properties" : {
+        "code" : {
+          "type" : "string",
+          "example" : "CHBCC"
+        },
+        "memberId" : {
+          "type" : "string",
+          "example" : "00230"
+        }
+      }
+    },
+    "commonStructuredOrUnstructuredAddress" : {
+      "title" : "Common Structured or Unstructured Address",
+      "type" : "object",
+      "properties" : {
+        "structured" : {
+          "$ref" : "#/definitions/commonStructuredAddress"
+        },
+        "unstructured" : {
+          "$ref" : "#/definitions/commonUnstructuredAddress"
+        }
+      }
+    },
+    "commonStructuredAddress" : {
+      "title" : "Common Structured Postal Address",
+      "type" : "object",
+      "required" : [ "streetName", "postCode", "townName", "country" ],
+      "properties" : {
+        "streetName" : {
+          "type" : "string",
+          "maxLength" : 70,
+          "example" : "Rue de la gare"
+        },
+        "buildingNumber" : {
+          "type" : "string",
+          "maxLength" : 16,
+          "example" : "24"
+        },
+        "postCode" : {
+          "type" : "string",
+          "maxLength" : 16,
+          "example" : "2501"
+        },
+        "townName" : {
+          "type" : "string",
+          "maxLength" : 35,
+          "example" : "Biel"
+        },
+        "country" : {
+          "type" : "string",
+          "maxLength" : 2,
+          "example" : "CH"
+        }
+      }
+    },
+    "commonUnstructuredAddress" : {
+      "title" : "Common Unstructured Address",
+      "type" : "object",
+      "required" : [ "addressLines", "country" ],
+      "properties" : {
+        "addressLines" : {
+          "type" : "array",
+          "description" : "max 2 lines of 35 characters. either postalAdress or adressLines must be set.",
+          "maxLength" : 2,
+          "example" : [ "Robert Schneider SA", "Rue de la gare 24" ],
+          "items" : {
+            "type" : "string",
+            "maxLength" : 70
+          }
+        },
+        "country" : {
+          "type" : "string",
+          "maxLength" : 2,
+          "example" : "CH"
+        }
+      }
+    },
+    "commonErrorResponse" : {
+      "title" : "Common Error Response",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "$ref" : "#/definitions/commonErrorType"
+        },
+        "title" : {
+          "type" : "string",
+          "example" : "This is the general problem description"
+        },
+        "detail" : {
+          "type" : "string",
+          "example" : "Detailed problem description with respect to the current request, e.g., invalid account number format"
+        },
+        "instance" : {
+          "type" : "string",
+          "example" : "path/to/corresponding/resource"
+        }
+      }
+    },
+    "commonErrorType" : {
+      "title" : "Common Error Type",
+      "description" : "Error Types for commonErrorResponse. See Appendix for detailed information.",
+      "type" : "string",
+      "enum" : [ "/problems/INVALID_PAYLOAD", "/problems/MALFORMED_PAYLOAD", "/problems/INVALID_TOKEN", "/problems/EXPIRED_TOKEN", "/problems/INSUFFICIENT_PRIVILEGES", "/problems/NO_ACCESS_TO_RESOURCE", "/problems/RESOURCE_DOES_NOT_EXIST", "/problems/RESOURCE_NOT_READY", "/problems/RESOURCE_TOO_LARGE", "/problems/WRONG_METHOD", "/problems/OPERATION_NOT_ALLOWED", "/problems/TECHNICAL_ERROR" ],
+      "example" : "/problems/TECHNICAL_ERROR"
+    },
+    "healthCheckResponse" : {
+      "title" : "Health Check Response",
+      "type" : "object",
+      "properties" : {
+        "requestDateTime" : {
+          "title" : "Request Time",
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2018-04-03T07:30:00+01:00"
+        },
+        "receivedHeaders" : {
+          "title" : "Received Headers",
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "headerName" : {
+                "type" : "string",
+                "example" : "X-Correlation-ID"
+              },
+              "headerValue" : {
+                "type" : "string",
+                "description" : "As received"
+              }
+            }
+          }
+        },
+        "receivedPayload" : {
+          "title" : "Received Payload",
+          "type" : "string",
+          "example" : "... as received ... "
+        }
+      }
+    }
+  },
+  "responses" : {
+    "standard400" : {
+      "headers" : {
+        "Content-Type" : {
+          "type" : "string",
+          "description" : "application/problem+json according to RFC7807"
+        },
+        "Content-Encoding" : {
+          "type" : "string",
+          "description" : "always UTF-8"
+        },
+        "Content-Language" : {
+          "type" : "string",
+          "description" : "always en"
+        },
+        "X-Correlation-ID" : {
+          "type" : "string",
+          "description" : "Reflected client defined ID from request."
+        }
+      },
+      "description" : "Bad Request - The format of the request was invalid.",
+      "schema" : {
+        "$ref" : "#/definitions/commonErrorResponse"
+      }
+    },
+    "standard401" : {
+      "headers" : {
+        "Content-Type" : {
+          "type" : "string",
+          "description" : "application/problem+json according to RFC7807"
+        },
+        "Content-Encoding" : {
+          "type" : "string",
+          "description" : "always UTF-8"
+        },
+        "Content-Language" : {
+          "type" : "string",
+          "description" : "always en"
+        },
+        "X-Correlation-ID" : {
+          "type" : "string",
+          "description" : "Reflected client defined ID from request."
+        }
+      },
+      "description" : "Unauthorized - Either no token or an invalid (e.g., token expired) token was received.",
+      "schema" : {
+        "$ref" : "#/definitions/commonErrorResponse"
+      }
+    },
+    "standard403" : {
+      "headers" : {
+        "Content-Type" : {
+          "type" : "string",
+          "description" : "application/problem+json according to RFC7807"
+        },
+        "Content-Encoding" : {
+          "type" : "string",
+          "description" : "always UTF-8"
+        },
+        "Content-Language" : {
+          "type" : "string",
+          "description" : "always en"
+        },
+        "X-Correlation-ID" : {
+          "type" : "string",
+          "description" : "Reflected client defined ID from request."
+        }
+      },
+      "description" : "Forbidden - A valid OAuth Token was received, but access was denied.",
+      "schema" : {
+        "$ref" : "#/definitions/commonErrorResponse"
+      }
+    },
+    "standard404" : {
+      "headers" : {
+        "Content-Type" : {
+          "type" : "string",
+          "description" : "application/problem+json according to RFC7807"
+        },
+        "Content-Encoding" : {
+          "type" : "string",
+          "description" : "always UTF-8"
+        },
+        "Content-Language" : {
+          "type" : "string",
+          "description" : "always en"
+        },
+        "X-Correlation-ID" : {
+          "type" : "string",
+          "description" : "Reflected client defined ID from request."
+        }
+      },
+      "description" : "Not Found - Either the endpoint does not exist or a requested resource is not yet available (e.g., account statements)",
+      "schema" : {
+        "$ref" : "#/definitions/commonErrorResponse"
+      }
+    },
+    "standard405" : {
+      "headers" : {
+        "Content-Type" : {
+          "type" : "string",
+          "description" : "application/problem+json according to RFC7807"
+        },
+        "Content-Encoding" : {
+          "type" : "string",
+          "description" : "always UTF-8"
+        },
+        "Content-Language" : {
+          "type" : "string",
+          "description" : "always en"
+        },
+        "X-Correlation-ID" : {
+          "type" : "string",
+          "description" : "Reflected client defined ID from request."
+        }
+      },
+      "description" : "Method Not Allowed",
+      "schema" : {
+        "$ref" : "#/definitions/commonErrorResponse"
+      }
+    },
+    "standard500" : {
+      "headers" : {
+        "Content-Type" : {
+          "type" : "string",
+          "description" : "application/problem+json according to RFC7807"
+        },
+        "Content-Encoding" : {
+          "type" : "string",
+          "description" : "always UTF-8"
+        },
+        "Content-Language" : {
+          "type" : "string",
+          "description" : "always en"
+        },
+        "X-Correlation-ID" : {
+          "type" : "string",
+          "description" : "Reflected client defined ID from request."
+        }
+      },
+      "description" : "Internal Server Error",
+      "schema" : {
+        "$ref" : "#/definitions/commonErrorResponse"
+      }
+    }
+  }
+}

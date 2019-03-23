@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+(C) Copyright 2011, SKSF, www.sksf.ch
+
+Anregungen und Fragen zu diesem Dokument können an das jeweilige Finanzinstitut gerichtet werden. 
+Allgemeine Anregungen können auch bei der SIX Interbank Clearing AG unter folgender Adresse angebracht werden: 
+pm@six-group.com
+-->
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd  pain.001.001.03.ch.02.xsd">
+	<CstmrCdtTrfInitn>
+		<GrpHdr>
+			<MsgId>MSG-05</MsgId>
+			<CreDtTm>2010-02-15T07:30:00</CreDtTm>
+			<NbOfTxs>1</NbOfTxs>
+			<CtrlSum>3421.00</CtrlSum>
+			<InitgPty>
+				<Nm>MUSTER AG</Nm>
+			</InitgPty>
+		</GrpHdr>
+		<PmtInf>
+			<PmtInfId>PMTINF-01</PmtInfId>
+			<PmtMtd>TRF</PmtMtd>
+			<BtchBookg>true</BtchBookg>
+			<PmtTpInf>
+				<SvcLvl>
+					<Cd>SEPA</Cd>
+				</SvcLvl>
+			</PmtTpInf>
+			<ReqdExctnDt>2010-02-18</ReqdExctnDt>
+			<Dbtr>
+				<Nm>MUSTER AG</Nm>
+			</Dbtr>
+			<DbtrAcct>
+				<Id>
+					<IBAN>CH5481230000001998736</IBAN>
+				</Id>
+			</DbtrAcct>
+			<DbtrAgt>
+				<FinInstnId>
+					<BIC>RAIFCH22</BIC>
+				</FinInstnId>
+			</DbtrAgt>
+			<CdtTrfTxInf>
+				<PmtId>
+					<InstrId>INSTRID-01-01</InstrId>
+					<EndToEndId>ENDTOENDID-001</EndToEndId>
+				</PmtId>
+				<Amt>
+					<InstdAmt Ccy="EUR">3421.00</InstdAmt>
+				</Amt>
+				<CdtrAgt>
+					<FinInstnId>
+						<BIC>UBSWDEFF</BIC>
+					</FinInstnId>
+				</CdtrAgt>
+				<Cdtr>
+					<Nm>Peter Haller</Nm>
+					<PstlAdr>
+						<StrtNm>Rosenauweg</StrtNm>
+						<BldgNb>4</BldgNb>
+						<PstCd>80036</PstCd>
+						<TwnNm>Muenchen</TwnNm>
+						<Ctry>DE</Ctry>
+					</PstlAdr>
+				</Cdtr>
+				<CdtrAcct>
+					<Id>
+						<IBAN>DE62007620110623852957</IBAN>
+					</Id>
+				</CdtrAcct>
+				<RmtInf>
+					<Strd>
+						<CdtrRefInf>
+							<Tp>
+								<CdOrPrtry>
+									<Cd>SCOR</Cd>
+								</CdOrPrtry>
+							</Tp>
+							<Ref>RF712348231</Ref>
+						</CdtrRefInf>
+					</Strd>
+				</RmtInf>
+			</CdtTrfTxInf>
+		</PmtInf>
+	</CstmrCdtTrfInitn>
+</Document>

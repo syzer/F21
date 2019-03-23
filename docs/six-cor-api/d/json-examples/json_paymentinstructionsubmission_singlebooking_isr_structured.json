@@ -1,0 +1,43 @@
+{
+  "messageId" : "eb6305c91f7f49deaed016487c27b42d",
+  "initiatingPartyId" : "TPP01746",
+  "requestedExecutionDate" : "2018-04-07",
+  "debtorAccount" : {
+    "type" : "IBAN",
+    "identification" : "CH9300762011623852957"
+  },
+  "bookingInstruction" : "SINGLEBOOKING_SIA",
+  "transactions" : [
+  	{
+      "instructionId" : "DNCS-20180407-IXN0-TXN0",
+      "endToEndId" : "ENDTOENDID-001",
+      "instructedAmount" : {
+        "currency" : "CHF",
+        "amount" : "8479.25"
+      },
+      "isrDetails" : {
+        "creditorAccount" : {
+          "type" : "OTHER",
+          "identification" : "01-39139-1"
+        },
+        "creditor" : {
+          "name" : "Robert Schneider",
+          "postalAddress" : {
+            "structured" : {
+              "streetName" : "Rue de la Gare",
+              "buildingNumber" : "25",
+              "postCode" : "8501",
+              "townName" : "Biel",
+              "country" : "CH"
+            }
+          }
+        },
+        "remittanceReference" : { 
+        	"type" : "ISR",
+        	"reference" : "210000000003139471430009017"
+        }
+  	  }
+  	}
+  ]
+}
+

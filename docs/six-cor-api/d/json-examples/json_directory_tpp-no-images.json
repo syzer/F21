@@ -1,0 +1,162 @@
+[
+  {
+    "clientId" : "1234",
+    "companyName" : "ACME",
+    "contact" : [
+      {
+        "type" : "BUSINESS",
+        "emailAddress" : "business-contact@acme.com"
+      },
+      {
+        "type" : "TECHNICAL",
+        "emailAddress" : "technical-contact@acme.com"
+      }
+    ],
+    "companyLogo" : {
+      "small" : {
+        "mimeType" : "image/png",
+        "image" : "PGJhc2U2NCBlbmNvZGVkIGltYWdlPg=="
+      },
+      "large" : {
+        "mimeType" : "image/png",
+        "image" : "PGJhc2U2NCBlbmNvZGVkIGltYWdlPg=="
+      }
+    },
+    "marketingImage" : {
+      "mimeType" : "image/png",
+      "image" : "PGJhc2U2NCBlbmNvZGVkIGltYWdlPg=="
+    },
+    "companyUrl" : "https://www.acme.com",
+    "clientConsentBackendUrl" : "https://www.acme.com/consent",
+    "marketingDescription" : {
+      "en" : [
+        "bullet1",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "bullet5"
+      ],
+      "de" : [
+        "bullet1",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "bullet5"
+      ],
+      "fr" : [
+        "bullet1",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "bullet5"
+      ],
+      "it" : [
+        "bullet1",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "bullet5"
+      ]
+    },
+    "shortDescription" : {
+      "en" : "short description",
+      "de" : "short description",
+      "fr" : "short description",
+      "it" : "short description"
+    },
+    "status" : "ACTIVE",
+    "registrationDate" : "2018-10-11",
+    "lastModified" : "2018-11-11T12:39:23+01:00",
+    "software" : {
+      "productName" : {
+        "de" : "ACME Buchhaltungssoftware",
+        "en" : "ACME accounting software",
+        "fr" : "ACME software comptable",
+        "it" : "ACME software contabilità"
+      },
+      "manufacturer" : "ACME Corp.",
+      "category" : [
+        "ACCOUNTING"
+      ],
+      "productInfoUrl" : "https://acme.com/amce_accounting",
+      "productLogo" : {
+        "small" : {
+          "mimeType" : "image/png",
+          "image" : "PGJhc2U2NCBlbmNvZGVkIGltYWdlPg=="
+        },
+        "large" : {
+          "mimeType" : "image/png",
+          "image" : "PGJhc2U2NCBlbmNvZGVkIGltYWdlPg=="
+        }
+      },
+      "marketingImage" : {
+        "mimeType" : "image/png",
+        "image" : "PGJhc2U2NCBlbmNvZGVkIGltYWdlPg=="
+      },
+      "marketingDescription" : {
+        "en" : [
+          "bullet1",
+          "bullet2",
+          "bullet3",
+          "bullet4",
+          "bullet5"
+        ],
+        "de" : [
+          "bullet1",
+          "bullet2",
+          "bullet3",
+          "bullet4",
+          "bullet5"
+        ],
+        "fr" : [
+          "bullet1",
+          "bullet2",
+          "bullet3",
+          "bullet4",
+          "bullet5"
+        ],
+        "it" : [
+          "bullet1",
+          "bullet2",
+          "bullet3",
+          "bullet4",
+          "bullet5"
+        ]
+      },
+      "shortDescription" : {
+        "en" : "short description",
+        "de" : "short description",
+        "fr" : "short description",
+        "it" : "short description"
+      }
+    },
+    "useCases" : [
+      {
+        "name" : "ais",
+        "version" : "v1",
+        "status" : "CERTIFIED",
+        "from" : "2018-10-09T14:00:00+02:00",
+        "until" : "2019-01-01T23:59:59+01:00"
+      },
+      {
+        "name" : "ais",
+        "version" : "v2",
+        "status" : "ONBOARDING",
+        "from" : "9999-12-31T23:59:59+01:00",
+        "until" : "9999-12-31T23:59:59+01:00"
+      },
+      {
+        "name" : "pmtsxml",
+        "version" : "v1",
+        "status" : "CERTIFIED",
+        "from" : "2018-10-09T14:00:00+02:00",
+        "until" : "9999-12-31T23:59:59+01:00",
+        "properties" : {
+          "maxBulkItems" : "1000",
+          "maxXmlRequestSizeKb" : "10240"
+        }
+      }
+    ]
+  }
+]
+
