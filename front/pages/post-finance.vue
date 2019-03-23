@@ -21,14 +21,19 @@ export default {
   watch: {
     discounts(newCount, oldCount) {
       if (newCount !== oldCount) {
-        // console.log(`We have ${newCount} fruits now, yaay!`)
-        // TODO finishme
+        // TODO finish me
       }
     }
   },
   mounted() {
     const socket = io('http://localhost:4000')
-    socket.emit('chat message', 'connecting')
+
+    this.$getLocation({}).then(coordinates =>
+      socket.emit('getPersonalizedDiscounts', {
+        coordinates,
+        uuid: this.$store.state.user.uuid
+      })
+    )
 
     socket.on('personalizedDiscounts', discounts => {
       this.$store.commit('newDiscounts', discounts)
@@ -43,6 +48,7 @@ export default {
   bottom: 150px;
   right: 50px;
 }
+
 .container {
   margin: 0 auto;
   min-height: 100vh;

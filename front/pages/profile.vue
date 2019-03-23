@@ -3,9 +3,7 @@
     <logo></logo>
     <section class="container">
       <div>
-        <h5 class="title">
-          Welcome Piotr
-        </h5>
+        <h5 class="title">Welcome {{ name }}</h5>
         <b-form-group label="You are interested in recommendations for ">
           <b-form-checkbox-group
             v-model="selected"
@@ -38,7 +36,8 @@ export default {
         { text: 'Shoes', value: 'apple' },
         { text: 'Furniture', value: 'pineapple' },
         { text: 'Music events', value: 'grape' }
-      ]
+      ],
+      name: this.$store.state.user.name
     }
   },
   computed: {
