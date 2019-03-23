@@ -1,0 +1,21 @@
+{
+  "name": "swiss-corporate-api",
+  "version": "0.0.1-alpha1",
+  "description": "This is the release candidate version of the \"Swiss Corporate API\" specification. ",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js",
+    "dev": "NODE_ENV=development RUNNING_SWAGGER_TOOLS_TESTS=true node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.6.6",
+    "js-yaml": "^3.13.0",
+    "swagger-tools": "^0.10.4"
+  }
+}

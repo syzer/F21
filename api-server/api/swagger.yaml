@@ -1,0 +1,5453 @@
+---
+swagger: "2.0"
+info:
+  description: "This is the release candidate version of the \"Swiss Corporate API\"\
+    \ specification.\n"
+  version: "1.0.0.2-SNAPSHOT"
+  title: "Swiss Corporate API"
+  contact:
+    name: "SIX Group"
+    url: "https://www.six-group.com/"
+    email: "swisscorpapi@six-group.com"
+host: "tbd.six-group.com"
+basePath: "/api/bankingservices/corporate/v1"
+tags:
+- name: "payments"
+  description: "**payment initiation submission**\nPayment Initiation Service - third\
+    \ party payment instruction submission\n"
+- name: "accounts"
+  description: "**account information**\nAccount Information Service - third party\
+    \ access to bank account data\n"
+- name: "iso20022"
+  description: "**iso20022 xml**\n\"SPSSTMT\": Transport XML account statements &\
+    \ \"SPSPMTS\": Transport XML payment initiations\n"
+- name: "directory"
+  description: "**participant information**\nInformation about participating parties.\
+    \ (SCOPE: SIX)\n"
+- name: "consents"
+  description: "**consent information**\nInformation about granted consents.\n"
+- name: "oauth"
+  description: "**oauth**\nOAuth endpoint\n"
+- name: "diagnostics"
+  description: "**diagnostics**\nDiagnostics endpoint\n"
+schemes:
+- "https"
+paths:
+  /payments:
+    post:
+      tags:
+      - "payments"
+      summary: "Submit payment instructions"
+      operationId: "submitPaymentInstructions"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      - name: "X-PSU-IP-Address"
+        in: "header"
+        description: "IP address of the user initiating the operation"
+        required: true
+        type: "string"
+      - name: "X-PSU-User-Agent"
+        in: "header"
+        description: "User agent of the user initiating the operation"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Payment instruction details as defined by data model.\n"
+        required: true
+        schema:
+          $ref: "#/definitions/paymentSubmissionRequest"
+      responses:
+        201:
+          description: "Created."
+          headers:
+            Location:
+              type: "string"
+              description: "Location of the submitted payment submission message.\
+                \ Add /status for the status report."
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Payments"
+  /payments/{submissionId}:
+    get:
+      tags:
+      - "payments"
+      summary: "Retrieve a payment submission"
+      operationId: "retrievePaymentSubmission"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "submissionId"
+        in: "path"
+        description: "id of payment submission"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "The original payment submission"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/paymentSubmissionRequest"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Payments"
+  /payments/{submissionId}/status:
+    get:
+      tags:
+      - "payments"
+      summary: "Retrieve payment submission status information"
+      operationId: "retrievePaymentSubmissionStatus"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "submissionId"
+        in: "path"
+        description: "id of payment submission"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Status information for the payment submission"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/paymentSubmissionStatus"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Payments"
+  /accounts:
+    get:
+      tags:
+      - "accounts"
+      summary: "Retrieve list of authorized accounts"
+      operationId: "requestAccountList"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns a list of authorized accounts."
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/accountItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Accounts"
+  /accounts/{accountId}:
+    get:
+      tags:
+      - "accounts"
+      summary: "Retrieve information about a single specific account"
+      operationId: "requestAccountDetails"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "accountId"
+        in: "path"
+        description: "id of account"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns the details of an account."
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/accountItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Accounts"
+  /accounts/{accountId}/balance:
+    get:
+      tags:
+      - "accounts"
+      summary: "Retrieve account balance information"
+      description: "Retrieve account balance information.\n* Returns the intraday\
+        \ booked balance (ITBD), if called without a date.\n* Returns the intraday\
+        \ booked balance (ITBD), if called for the current date.\n* Returns the closing\
+        \ booked balance (CLBD), if called for a past date."
+      operationId: "requestAccountBalance"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "accountId"
+        in: "path"
+        description: "id of account"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "date"
+        in: "query"
+        description: "The date to query, formatted as yyyy-mm-dd."
+        required: false
+        type: "string"
+        default: "the current date"
+        format: "date"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns account balance information."
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/accountBalanceItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Accounts"
+  /accounts/{accountId}/transactions:
+    get:
+      tags:
+      - "accounts"
+      summary: "Retrieve transactions of a specific account"
+      description: "* Returns the transaction list of the current day, if called without\
+        \ a date. * Returns the transaction list for a specific day, if called for\
+        \ a past date. In case the specified day has not yet been finalized, the response\
+        \ will be a 404 error.\n"
+      operationId: "requestAccountTransactions"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "accountId"
+        in: "path"
+        description: "id of account"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "date"
+        in: "query"
+        description: "The date to query, formatted as yyyy-mm-dd."
+        required: false
+        type: "string"
+        default: "the current date"
+        format: "date"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns transactions of an account."
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/accountTransactionReport"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Accounts"
+  /iso20022/payments:
+    post:
+      tags:
+      - "iso20022"
+      summary: "Submit an ISO20022 XML payment instruction (PAIN.001)"
+      description: "Submit an ISO20022 XML PAIN.001 payment instruction.\nThe submitted\
+        \ payment instruction must conform to the XML Schema and Implementation Guidelines\
+        \ defined by Swiss Payment Standards;\nsee: https://www.six-interbank-clearing.com/en/home/standardization/iso-payments/customer-bank/implementation-guidelines.html\n"
+      operationId: "submitIso20022PaymentInstruction"
+      consumes:
+      - "application/xml"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      - name: "X-PSU-IP-Address"
+        in: "header"
+        description: "IP address of the user initiating the operation"
+        required: true
+        type: "string"
+      - name: "X-PSU-User-Agent"
+        in: "header"
+        description: "User agent of the user initiating the operation"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Payment instruction details as defined by data model.\n"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        201:
+          description: "Created."
+          headers:
+            Location:
+              type: "string"
+              description: "Location of the submitted ISO20022 XML PAIN.001 message.\
+                \ Add /status for the PAIN.002 status report."
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Iso20022"
+  /iso20022/payments/{submissionId}:
+    get:
+      tags:
+      - "iso20022"
+      summary: "Retrieve the submitted ISO20022 XML PAIN.001 message."
+      operationId: "retrieveIso20022PaymentInstruction"
+      produces:
+      - "application/xml"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "submissionId"
+        in: "path"
+        description: "id of payment submission"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns the submitted ISO20022 XML PAIN.001 message"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "file"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Iso20022"
+  /iso20022/payments/{submissionId}/status:
+    get:
+      tags:
+      - "iso20022"
+      summary: "Retrieve ISO20022 XML status report (PAIN.002) of a payment instruction"
+      description: "Retrieve the XML ISO20022 pain.002 status report.\nThe returned\
+        \ status report must conform to the XML Schema and Implementation Guidelines\
+        \ defined by Swiss Payment Standards;\nsee: https://www.six-interbank-clearing.com/en/home/standardization/iso-payments/customer-bank/implementation-guidelines.html\n"
+      operationId: "retrieveIso20022PaymentInstructionStatusReport"
+      produces:
+      - "application/xml"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "submissionId"
+        in: "path"
+        description: "id of payment submission"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns the ISO20022 XML PAIN.002 status report of a payment\
+            \ instruction"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "file"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Iso20022"
+  /iso20022/statements:
+    get:
+      tags:
+      - "iso20022"
+      summary: "Retrieve a list of resource links to account statements (CAMT.053)"
+      description: "Retrieve resources links to available account statements.\nThe\
+        \ returned account statements must conform to the XML Schema and Implementation\
+        \ Guidelines defined by Swiss Payment Standards;\nsee: https://www.six-interbank-clearing.com/en/home/standardization/iso-payments/customer-bank/implementation-guidelines.html\n"
+      operationId: "retrieveIso20022AccountStatementIds"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns a collection of references to account statements"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/iso20022ReportReference"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Iso20022"
+  /iso20022/statements/{reportId}:
+    get:
+      tags:
+      - "iso20022"
+      summary: "Retrieves the designated ISO20022 XML CAMT document."
+      operationId: "retrieveIso20022AccountStatement"
+      produces:
+      - "application/xml"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "reportId"
+        in: "path"
+        description: "id of report"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Returns the selected ISO20022 XML CAMT document."
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "file"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Iso20022"
+  /consents:
+    get:
+      tags:
+      - "consents"
+      summary: "Retrieve a list of consents"
+      description: "The consents endpoint allows the client (e.g., a third party provider)\
+        \ to query the consents for a given corporate user. The provider (e.g., a\
+        \ financial institution) must return the consents linked with the access token\
+        \ supplied with the request.\n"
+      operationId: "retrieveConsents"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of consents"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/consentItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Consents"
+  /directory/clients:
+    get:
+      tags:
+      - "directory"
+      summary: "Retrieve a list of all registered clients (e.g., third party providers)"
+      description: "Returns a list of clients with information regarding software\
+        \ and supported use cases. (SCOPE: SIX)\n"
+      operationId: "retrieveClients"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "status=ACTIVE returns only active clients"
+        required: false
+        type: "string"
+        default: "ACTIVE"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+        - "SUSPENDED"
+        - "ONBOARDING"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of clients"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/directoryClientItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Directory"
+  /directory/clients/{clientId}:
+    get:
+      tags:
+      - "directory"
+      summary: "Retrieve the information for a registered client (e.g. third party\
+        \ provider)"
+      description: "Returns information regarding software and supported use cases\
+        \ of a client. (SCOPE: SIX)\n"
+      operationId: "retrieveClientDetail"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "clientId"
+        in: "path"
+        description: "id of the client"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Information for a client"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/directoryClientItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Directory"
+  /directory/providers:
+    get:
+      tags:
+      - "directory"
+      summary: "Retrieve a list of all registered providers (e.g., financial institutions)"
+      description: "Returns a list of providers with information regarding software\
+        \ and supported use cases. (SCOPE: SIX)\n"
+      operationId: "retrieveProviders"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "status=ACTIVE returns only active clients"
+        required: false
+        type: "string"
+        default: "ACTIVE"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+        - "SUSPENDED"
+        - "ONBOARDING"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of providers"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/directoryProviderItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Directory"
+  /directory/providers/{providerId}:
+    get:
+      tags:
+      - "directory"
+      summary: "Retrieve the informatoin for a registered provider (e.g., financial\
+        \ institutions)"
+      description: "Returns information regarding software and supported use cases\
+        \ of a provider. (SCOPE: SIX)\n"
+      operationId: "retrieveProviderDetail"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "id of the provider"
+        required: true
+        type: "string"
+        maxLength: 30
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Information for a provider"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+          schema:
+            $ref: "#/definitions/directoryProviderItem"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Directory"
+  /oauth/token:
+    post:
+      tags:
+      - "oauth"
+      summary: "Get the OAuth access and refresh token"
+      description: "Returns the OAuth access and refresh token for the specified client\
+        \ and target\n"
+      operationId: "oauthToken"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "grant_type"
+        in: "formData"
+        description: "either authorization_code or refresh_token"
+        required: true
+        type: "string"
+        enum:
+        - "authorization_code"
+        - "refresh_token"
+      - name: "code"
+        in: "formData"
+        description: "authorization code if applicable"
+        required: false
+        type: "string"
+      - name: "refresh_token"
+        in: "formData"
+        description: "refresh token if applicable"
+        required: false
+        type: "string"
+      - name: "redirect_uri"
+        in: "formData"
+        description: "original redirect uri if applicable"
+        required: false
+        type: "string"
+      - name: "client_id"
+        in: "formData"
+        description: "client id"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID that identifies the provider (e.g., a financial institution).\
+          \ (SCOPE: SIX)"
+        required: true
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: true
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: true
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the Client software"
+        required: true
+        type: "string"
+      - name: "X-PSU-IP-Address"
+        in: "header"
+        description: "IP address of the user initiating the operation"
+        required: true
+        type: "string"
+      - name: "X-PSU-User-Agent"
+        in: "header"
+        description: "User agent of the user initiating the operation"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OAuth token response"
+          headers:
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflects the ID (set by the caller) from the request."
+            Cache-Control:
+              type: "string"
+              description: "must be: no-store"
+              default: "no-store"
+            Pragma:
+              type: "string"
+              description: "must be: no-cache"
+              default: "no-cache"
+          schema:
+            $ref: "#/definitions/oauthTokenResponse"
+        400:
+          description: "Bad Request - The format of the request was invalid."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        401:
+          description: "Unauthorized - Either no token or an invalid (e.g., token\
+            \ expired) token was received."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        403:
+          description: "Forbidden - A valid OAuth Token was received, but access was\
+            \ denied."
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        404:
+          description: "Not Found - Either the endpoint does not exist or a requested\
+            \ resource is not yet available (e.g., account statements)"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        405:
+          description: "Method Not Allowed"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+        500:
+          description: "Internal Server Error"
+          headers:
+            Content-Type:
+              type: "string"
+              description: "application/problem+json according to RFC7807"
+            Content-Encoding:
+              type: "string"
+              description: "always UTF-8"
+            Content-Language:
+              type: "string"
+              description: "always en"
+            X-Correlation-ID:
+              type: "string"
+              description: "Reflected client defined ID from request."
+          schema:
+            $ref: "#/definitions/commonErrorResponse"
+      x-swagger-router-controller: "Oauth"
+  /healthcheck:
+    get:
+      tags:
+      - "diagnostics"
+      summary: "Returns all specified request headers and additional diagnostic information"
+      operationId: "healthCheckGet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: false
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the client software"
+        required: false
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID of the target, e.g., a financial institution. (SCOPE: SIX)"
+        required: false
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: false
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: false
+        type: "string"
+      - name: "X-PSU-IP-Address"
+        in: "header"
+        description: "IP address of the user initiating the operation"
+        required: false
+        type: "string"
+      - name: "X-PSU-User-Agent"
+        in: "header"
+        description: "User of the client software"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Health Check Response"
+          schema:
+            $ref: "#/definitions/healthCheckResponse"
+      x-swagger-router-controller: "Diagnostics"
+    post:
+      tags:
+      - "diagnostics"
+      summary: "Returns all specified request headers, the request body and additional\
+        \ diagnostic information"
+      operationId: "healthCheckPost"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Bearer followed by a base64 encoded OAuth access token"
+        required: false
+        type: "string"
+      - name: "User-Agent"
+        in: "header"
+        description: "Name and version of the of the client software"
+        required: false
+        type: "string"
+      - name: "X-CorAPI-Target-ID"
+        in: "header"
+        description: "ID of the target, e.g., a financial institution. (SCOPE: SIX)"
+        required: false
+        type: "string"
+      - name: "X-CorAPI-Client-ID"
+        in: "header"
+        description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+        required: false
+        type: "string"
+      - name: "X-Correlation-ID"
+        in: "header"
+        description: "Unique ID (defined by the caller) which will be reflected back\
+          \ in the response."
+        required: false
+        type: "string"
+      - name: "X-PSU-IP-Address"
+        in: "header"
+        description: "IP address of the user initiating the operation"
+        required: false
+        type: "string"
+      - name: "X-PSU-User-Agent"
+        in: "header"
+        description: "User of the client software"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: "Health Check Response"
+          schema:
+            $ref: "#/definitions/healthCheckResponse"
+      x-swagger-router-controller: "Diagnostics"
+definitions:
+  paymentSubmissionRequest:
+    type: "object"
+    required:
+    - "bookingInstruction"
+    - "debtorAccount"
+    - "initiatingPartyId"
+    - "messageId"
+    - "requestedExecutionDate"
+    - "transactions"
+    properties:
+      messageId:
+        type: "string"
+        example: "eb6305c91f7f49deaed016487c27b42d"
+        maxLength: 35
+      initiatingPartyId:
+        type: "string"
+        example: "TPP01746"
+        maxLength: 32
+      requestedExecutionDate:
+        type: "string"
+        format: "date"
+        example: "2018-04-07"
+      debtorAccount:
+        $ref: "#/definitions/paymentIbanAccount"
+      bookingInstruction:
+        $ref: "#/definitions/paymentBookingInstruction"
+      transactions:
+        type: "array"
+        items:
+          $ref: "#/definitions/paymentInstructionItem"
+    title: "Payment Submission Request"
+    example:
+      initiatingPartyId: "TPP01746"
+      bookingInstruction: "BATCHBOOKING_SALA_CND"
+      debtorAccount:
+        identification: "CH9300762011623852957"
+        type: "IBAN"
+      requestedExecutionDate: "2018-04-07"
+      messageId: "eb6305c91f7f49deaed016487c27b42d"
+      transactions:
+      - otherDetails:
+          chargeBearer: "SHAR"
+          creditorAgent:
+            clearingSystemMemberIdentification:
+              code: "CHBCC"
+              memberId: "00230"
+            bic: "BDEMMXMM"
+          creditorAccount:
+            identification: "762011623852957"
+            type: "OTHER"
+          creditor:
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "name"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        ibanDetails:
+          chargeBearer: "SHAR"
+          creditorAgent:
+            clearingSystemMemberIdentification:
+              code: "CHBCC"
+              memberId: "00230"
+            bic: "BDEMMXMM"
+          remittanceInformation: "Verguetung Juli"
+          creditorAccount:
+            identification: "CH9300762011623852957"
+            type: "IBAN"
+          sepaIndicator: true
+          creditor:
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "name"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        instructionId: "INSTR-001"
+        instructedAmount:
+          amount: "10.25"
+          currency: "CHF"
+        endToEndId: "ENDTOENDID-001"
+        isrDetails:
+          creditorAccount:
+            identification: "762011623852957"
+            type: "OTHER"
+          creditor:
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "name"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "ISR"
+      - otherDetails:
+          chargeBearer: "SHAR"
+          creditorAgent:
+            clearingSystemMemberIdentification:
+              code: "CHBCC"
+              memberId: "00230"
+            bic: "BDEMMXMM"
+          creditorAccount:
+            identification: "762011623852957"
+            type: "OTHER"
+          creditor:
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "name"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        ibanDetails:
+          chargeBearer: "SHAR"
+          creditorAgent:
+            clearingSystemMemberIdentification:
+              code: "CHBCC"
+              memberId: "00230"
+            bic: "BDEMMXMM"
+          remittanceInformation: "Verguetung Juli"
+          creditorAccount:
+            identification: "CH9300762011623852957"
+            type: "IBAN"
+          sepaIndicator: true
+          creditor:
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "name"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        instructionId: "INSTR-001"
+        instructedAmount:
+          amount: "10.25"
+          currency: "CHF"
+        endToEndId: "ENDTOENDID-001"
+        isrDetails:
+          creditorAccount:
+            identification: "762011623852957"
+            type: "OTHER"
+          creditor:
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "name"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "ISR"
+  paymentInstructionItem:
+    type: "object"
+    required:
+    - "endToEndId"
+    - "instructedAmount"
+    - "instructionId"
+    properties:
+      instructionId:
+        type: "string"
+        example: "INSTR-001"
+        maxLength: 35
+      endToEndId:
+        type: "string"
+        example: "ENDTOENDID-001"
+        maxLength: 35
+      instructedAmount:
+        $ref: "#/definitions/paymentCurrencyAmount"
+      ibanDetails:
+        $ref: "#/definitions/paymentIBANDetail"
+      isrDetails:
+        $ref: "#/definitions/paymentISRDetail"
+      otherDetails:
+        $ref: "#/definitions/paymentOtherDetail"
+    title: "Payment Instruction Item"
+    example:
+      otherDetails:
+        chargeBearer: "SHAR"
+        creditorAgent:
+          clearingSystemMemberIdentification:
+            code: "CHBCC"
+            memberId: "00230"
+          bic: "BDEMMXMM"
+        creditorAccount:
+          identification: "762011623852957"
+          type: "OTHER"
+        creditor:
+          postalAddress:
+            unstructured:
+              country: "CH"
+              addressLines:
+              - "Robert Schneider SA"
+              - "Rue de la gare 24"
+            structured:
+              country: "CH"
+              streetName: "Rue de la gare"
+              townName: "Biel"
+              buildingNumber: "24"
+              postCode: "2501"
+          name: "name"
+        remittanceReference:
+          reference: "210000000003139471430009017"
+          type: "SCOR"
+      ibanDetails:
+        chargeBearer: "SHAR"
+        creditorAgent:
+          clearingSystemMemberIdentification:
+            code: "CHBCC"
+            memberId: "00230"
+          bic: "BDEMMXMM"
+        remittanceInformation: "Verguetung Juli"
+        creditorAccount:
+          identification: "CH9300762011623852957"
+          type: "IBAN"
+        sepaIndicator: true
+        creditor:
+          postalAddress:
+            unstructured:
+              country: "CH"
+              addressLines:
+              - "Robert Schneider SA"
+              - "Rue de la gare 24"
+            structured:
+              country: "CH"
+              streetName: "Rue de la gare"
+              townName: "Biel"
+              buildingNumber: "24"
+              postCode: "2501"
+          name: "name"
+        remittanceReference:
+          reference: "210000000003139471430009017"
+          type: "SCOR"
+      instructionId: "INSTR-001"
+      instructedAmount:
+        amount: "10.25"
+        currency: "CHF"
+      endToEndId: "ENDTOENDID-001"
+      isrDetails:
+        creditorAccount:
+          identification: "762011623852957"
+          type: "OTHER"
+        creditor:
+          postalAddress:
+            unstructured:
+              country: "CH"
+              addressLines:
+              - "Robert Schneider SA"
+              - "Rue de la gare 24"
+            structured:
+              country: "CH"
+              streetName: "Rue de la gare"
+              townName: "Biel"
+              buildingNumber: "24"
+              postCode: "2501"
+          name: "name"
+        remittanceReference:
+          reference: "210000000003139471430009017"
+          type: "ISR"
+  paymentIBANDetail:
+    type: "object"
+    required:
+    - "creditor"
+    - "creditorAccount"
+    properties:
+      sepaIndicator:
+        type: "boolean"
+        example: true
+      creditorAccount:
+        $ref: "#/definitions/paymentIbanAccount"
+      creditorAgent:
+        $ref: "#/definitions/paymentCreditorAgent"
+      creditor:
+        $ref: "#/definitions/paymentCreditor"
+      chargeBearer:
+        $ref: "#/definitions/paymentChargeBearerMethod"
+      remittanceReference:
+        $ref: "#/definitions/paymentIbanRemittanceReference"
+      remittanceInformation:
+        type: "string"
+        example: "Verguetung Juli"
+    title: "Payment IBAN Detail"
+    example:
+      chargeBearer: "SHAR"
+      creditorAgent:
+        clearingSystemMemberIdentification:
+          code: "CHBCC"
+          memberId: "00230"
+        bic: "BDEMMXMM"
+      remittanceInformation: "Verguetung Juli"
+      creditorAccount:
+        identification: "CH9300762011623852957"
+        type: "IBAN"
+      sepaIndicator: true
+      creditor:
+        postalAddress:
+          unstructured:
+            country: "CH"
+            addressLines:
+            - "Robert Schneider SA"
+            - "Rue de la gare 24"
+          structured:
+            country: "CH"
+            streetName: "Rue de la gare"
+            townName: "Biel"
+            buildingNumber: "24"
+            postCode: "2501"
+        name: "name"
+      remittanceReference:
+        reference: "210000000003139471430009017"
+        type: "SCOR"
+  paymentISRDetail:
+    type: "object"
+    properties:
+      creditorAccount:
+        $ref: "#/definitions/paymentOtherAccount"
+      creditor:
+        $ref: "#/definitions/paymentCreditor"
+      remittanceReference:
+        $ref: "#/definitions/paymentIsrRemittanceReference"
+    title: "Payment ISR Detail"
+    example:
+      creditorAccount:
+        identification: "762011623852957"
+        type: "OTHER"
+      creditor:
+        postalAddress:
+          unstructured:
+            country: "CH"
+            addressLines:
+            - "Robert Schneider SA"
+            - "Rue de la gare 24"
+          structured:
+            country: "CH"
+            streetName: "Rue de la gare"
+            townName: "Biel"
+            buildingNumber: "24"
+            postCode: "2501"
+        name: "name"
+      remittanceReference:
+        reference: "210000000003139471430009017"
+        type: "ISR"
+  paymentOtherDetail:
+    type: "object"
+    properties:
+      creditorAccount:
+        $ref: "#/definitions/paymentOtherAccount"
+      creditorAgent:
+        $ref: "#/definitions/paymentCreditorAgent"
+      creditor:
+        $ref: "#/definitions/paymentCreditor"
+      chargeBearer:
+        $ref: "#/definitions/paymentChargeBearerMethod"
+      remittanceReference:
+        $ref: "#/definitions/paymentOtherRemittanceReference"
+    title: "Payment Other Detail"
+    example:
+      chargeBearer: "SHAR"
+      creditorAgent:
+        clearingSystemMemberIdentification:
+          code: "CHBCC"
+          memberId: "00230"
+        bic: "BDEMMXMM"
+      creditorAccount:
+        identification: "762011623852957"
+        type: "OTHER"
+      creditor:
+        postalAddress:
+          unstructured:
+            country: "CH"
+            addressLines:
+            - "Robert Schneider SA"
+            - "Rue de la gare 24"
+          structured:
+            country: "CH"
+            streetName: "Rue de la gare"
+            townName: "Biel"
+            buildingNumber: "24"
+            postCode: "2501"
+        name: "name"
+      remittanceReference:
+        reference: "210000000003139471430009017"
+        type: "SCOR"
+  paymentCreditor:
+    type: "object"
+    required:
+    - "name"
+    - "postalAddress"
+    properties:
+      name:
+        type: "string"
+      postalAddress:
+        $ref: "#/definitions/commonStructuredOrUnstructuredAddress"
+    title: "Payment Creditor"
+    example:
+      postalAddress:
+        unstructured:
+          country: "CH"
+          addressLines:
+          - "Robert Schneider SA"
+          - "Rue de la gare 24"
+        structured:
+          country: "CH"
+          streetName: "Rue de la gare"
+          townName: "Biel"
+          buildingNumber: "24"
+          postCode: "2501"
+      name: "name"
+  paymentChargeBearerMethod:
+    type: "string"
+    title: "Payment Charge Bearer Method"
+    example: "SHAR"
+    enum:
+    - "DEBT"
+    - "CRED"
+    - "SHAR"
+    - "SLEV"
+  paymentBookingInstruction:
+    type: "string"
+    title: "Payment Booking Instruction"
+    example: "BATCHBOOKING_SALA_CND"
+    enum:
+    - "SINGLEBOOKING_SIA"
+    - "SINGLEBOOKING_NOA"
+    - "BATCHBOOKING_SALA_NOA"
+    - "BATCHBOOKING_SALA_CND"
+    - "BATCHBOOKING_NOA"
+    - "BATCHBOOKING_CND"
+    - "BATCHBOOKING_CWD"
+  paymentSubmissionStatus:
+    type: "object"
+    properties:
+      messageId:
+        type: "string"
+        example: "eb6305c91f7f49deaed016487c27b42d"
+      statusCode:
+        type: "string"
+        example: "PART"
+        enum:
+        - "ACCP"
+        - "RJCT"
+        - "PART"
+      transactions:
+        type: "array"
+        items:
+          $ref: "#/definitions/paymentInstructionItemStatus"
+    title: "Payment Submission Status"
+    example:
+      messageId: "eb6305c91f7f49deaed016487c27b42d"
+      transactions:
+      - reasonInformation: "currency USD not allowed for payment type ISR"
+        instructionId: "DNCS-20180322-IXN0-TXN0"
+        reasonCode: "CURR"
+        statusCode: "RJCT"
+      - reasonInformation: "currency USD not allowed for payment type ISR"
+        instructionId: "DNCS-20180322-IXN0-TXN0"
+        reasonCode: "CURR"
+        statusCode: "RJCT"
+      statusCode: "PART"
+  paymentInstructionItemStatus:
+    type: "object"
+    properties:
+      instructionId:
+        type: "string"
+        example: "DNCS-20180322-IXN0-TXN0"
+      statusCode:
+        type: "string"
+        example: "RJCT"
+        enum:
+        - "ACCP"
+        - "RJCT"
+      reasonCode:
+        type: "string"
+        example: "CURR"
+      reasonInformation:
+        type: "string"
+        example: "currency USD not allowed for payment type ISR"
+    title: "Payment Instruction Item Status"
+    example:
+      reasonInformation: "currency USD not allowed for payment type ISR"
+      instructionId: "DNCS-20180322-IXN0-TXN0"
+      reasonCode: "CURR"
+      statusCode: "RJCT"
+  paymentCreditorAgent:
+    type: "object"
+    properties:
+      bic:
+        type: "string"
+        example: "BDEMMXMM"
+      clearingSystemMemberIdentification:
+        $ref: "#/definitions/commonClearingSystemMemberIdentification"
+    example:
+      clearingSystemMemberIdentification:
+        code: "CHBCC"
+        memberId: "00230"
+      bic: "BDEMMXMM"
+  paymentIbanAccount:
+    type: "object"
+    required:
+    - "identification"
+    - "type"
+    properties:
+      type:
+        type: "string"
+        description: "allowed account identification type for the creditor account\
+          \ depends on the payment type. The debtor account must always be an IBAN."
+        enum:
+        - "IBAN"
+      identification:
+        type: "string"
+        example: "CH9300762011623852957"
+        maxLength: 34
+        pattern: "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+    title: "Payment Account"
+    example:
+      identification: "CH9300762011623852957"
+      type: "IBAN"
+  paymentOtherAccount:
+    type: "object"
+    required:
+    - "identification"
+    - "type"
+    properties:
+      type:
+        type: "string"
+        description: "Account identification type. The debtor account must always\
+          \ be an IBAN."
+        enum:
+        - "OTHER"
+      identification:
+        type: "string"
+        example: "762011623852957"
+        maxLength: 34
+    title: "Payment Account"
+    example:
+      identification: "762011623852957"
+      type: "OTHER"
+  balanceCurrencyAmount:
+    type: "object"
+    required:
+    - "amount"
+    - "currency"
+    properties:
+      currency:
+        type: "string"
+        example: "CHF"
+      amount:
+        type: "string"
+        example: "10.25"
+        maxLength: 18
+        pattern: "-?[0-9]{1,12}([.][0-9]{1,5})?"
+    title: "Balance Currency-Amount"
+    example:
+      amount: "10.25"
+      currency: "CHF"
+  paymentCurrencyAmount:
+    type: "object"
+    required:
+    - "amount"
+    - "currency"
+    properties:
+      currency:
+        type: "string"
+        example: "CHF"
+      amount:
+        type: "string"
+        example: "10.25"
+        maxLength: 18
+        pattern: "[0-9]{1,12}([.][0-9]{1,5})?"
+    title: "Payment Currency-Amount"
+    example:
+      amount: "10.25"
+      currency: "CHF"
+  paymentIbanRemittanceReference:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "SCOR"
+        - "QRR"
+      reference:
+        type: "string"
+        example: "210000000003139471430009017"
+        maxLength: 35
+    title: "Payment Remittance Reference"
+    description: "either remittanceReference or remittanceInformation must be set"
+    example:
+      reference: "210000000003139471430009017"
+      type: "SCOR"
+  paymentIsrRemittanceReference:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "ISR"
+      reference:
+        type: "string"
+        example: "210000000003139471430009017"
+        maxLength: 35
+    title: "Payment Remittance Reference"
+    description: "either remittanceReference or remittanceInformation must be set"
+    example:
+      reference: "210000000003139471430009017"
+      type: "ISR"
+  paymentOtherRemittanceReference:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "SCOR"
+      reference:
+        type: "string"
+        example: "210000000003139471430009017"
+        maxLength: 35
+    title: "Payment Remittance Reference"
+    description: "either remittanceReference or remittanceInformation must be set"
+    example:
+      reference: "210000000003139471430009017"
+      type: "SCOR"
+  paymentRemittanceInformation:
+    type: "string"
+    title: "Payment Remittance Information"
+    maxLength: 140
+    description: "either remittanceReference or remittanceInformation must be set"
+    example: "Rechnung Nr. 408"
+  paymentEndToEndId:
+    type: "string"
+    title: "Payment End to End ID"
+    maxLength: 35
+    description: "Unique debtor (payee) reference."
+    example: "ENDTOENDID-001"
+  accountItem:
+    type: "object"
+    required:
+    - "account"
+    - "currency"
+    - "designation"
+    - "id"
+    properties:
+      id:
+        type: "string"
+        example: "550e8400-e29b-11d4-a716-446655440000"
+      account:
+        $ref: "#/definitions/paymentIbanAccount"
+      currency:
+        type: "string"
+        example: "CHF"
+      designation:
+        type: "string"
+        example: "Firmenkonto"
+        maxLength: 140
+      _links:
+        $ref: "#/definitions/accountItem__links"
+    title: "Account Information Item"
+    example:
+      _links:
+        balance: "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+        self: "/accounts/550e8400-e29b-11d4-a716-446655440000"
+        transactions: "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+      currency: "CHF"
+      id: "550e8400-e29b-11d4-a716-446655440000"
+      designation: "Firmenkonto"
+      account:
+        identification: "CH9300762011623852957"
+        type: "IBAN"
+  accountBalanceItem:
+    type: "object"
+    required:
+    - "balance"
+    - "balanceType"
+    - "date"
+    properties:
+      date:
+        type: "string"
+        format: "date"
+        example: "2010-02-15"
+      balanceType:
+        type: "string"
+        example: "CLBD"
+        enum:
+        - "ITBD"
+        - "CLBD"
+      balance:
+        $ref: "#/definitions/balanceCurrencyAmount"
+      _links:
+        $ref: "#/definitions/accountBalanceItem__links"
+    title: "Account Balance Item"
+    example:
+      date: "2010-02-15"
+      balanceType: "CLBD"
+      balance:
+        amount: "10.25"
+        currency: "CHF"
+      _links:
+        self: "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+        transactions: "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+        account: "/accounts/550e8400-e29b-11d4-a716-446655440000"
+  accountTransactionReport:
+    type: "object"
+    required:
+    - "entries"
+    - "iban"
+    properties:
+      iban:
+        type: "string"
+        example: "CH5481230000001998736"
+      designation:
+        type: "string"
+        example: "Checking Account"
+      entries:
+        type: "array"
+        items:
+          $ref: "#/definitions/accountTransactionEntry"
+      _links:
+        $ref: "#/definitions/accountTransactionReport__links"
+    title: "Account Transaction Report"
+    example:
+      entries:
+      - reversalIndicator: true
+        amount:
+          amount: "10.25"
+          currency: "CHF"
+        bankTransactionCode:
+          domainCode: "PMNT"
+          familyCode: "RCDT"
+          subFamilyCode: "DMCT"
+        valueDate: "2018-10-29"
+        transactions:
+        - transactionType: "CRDT"
+          amount:
+            amount: "10.25"
+            currency: "CHF"
+          remittanceInformation: "Rechnung Nr. 408"
+          additionalTransactionInformation: "additionalTransactionInformation"
+          bankTransactionCode:
+            domainCode: "PMNT"
+            familyCode: "RCDT"
+            subFamilyCode: "DMCT"
+          totalChargesAmount:
+            amount: "10.25"
+            currency: "CHF"
+            chargeRecords:
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+          counterparty:
+            agent:
+              clearingSystemMemberIdentification:
+                code: "CHBCC"
+                memberId: "00230"
+              bic: "bic"
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "Hans Muster"
+            account:
+              identification: "CH9300762011623852957"
+              type: "IBAN"
+          instructedAmount:
+            amount: "10.25"
+            targetCurrency: "USD"
+            exchangeRate: "0.957"
+            sourceCurrency: "CHF"
+            exchangeIndicator: "MULT"
+          endToEndId: "ENDTOENDID-01"
+          transactionId: "TX12345A987"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        - transactionType: "CRDT"
+          amount:
+            amount: "10.25"
+            currency: "CHF"
+          remittanceInformation: "Rechnung Nr. 408"
+          additionalTransactionInformation: "additionalTransactionInformation"
+          bankTransactionCode:
+            domainCode: "PMNT"
+            familyCode: "RCDT"
+            subFamilyCode: "DMCT"
+          totalChargesAmount:
+            amount: "10.25"
+            currency: "CHF"
+            chargeRecords:
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+          counterparty:
+            agent:
+              clearingSystemMemberIdentification:
+                code: "CHBCC"
+                memberId: "00230"
+              bic: "bic"
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "Hans Muster"
+            account:
+              identification: "CH9300762011623852957"
+              type: "IBAN"
+          instructedAmount:
+            amount: "10.25"
+            targetCurrency: "USD"
+            exchangeRate: "0.957"
+            sourceCurrency: "CHF"
+            exchangeIndicator: "MULT"
+          endToEndId: "ENDTOENDID-01"
+          transactionId: "TX12345A987"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        entryId: "ENTRY123456789"
+        transactionType: "CRDT"
+        entryReferenceInternalId: "010001628"
+        totalChargesAmount:
+          amount: "10.25"
+          currency: "CHF"
+          chargeRecords:
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+        additionalEntryInformation: "additionalEntryInformation"
+        bookingDate: "2018-10-29"
+        instructedAmount:
+          amount: "10.25"
+          targetCurrency: "USD"
+          exchangeRate: "0.957"
+          sourceCurrency: "CHF"
+          exchangeIndicator: "MULT"
+        entryReference: "10001628"
+      - reversalIndicator: true
+        amount:
+          amount: "10.25"
+          currency: "CHF"
+        bankTransactionCode:
+          domainCode: "PMNT"
+          familyCode: "RCDT"
+          subFamilyCode: "DMCT"
+        valueDate: "2018-10-29"
+        transactions:
+        - transactionType: "CRDT"
+          amount:
+            amount: "10.25"
+            currency: "CHF"
+          remittanceInformation: "Rechnung Nr. 408"
+          additionalTransactionInformation: "additionalTransactionInformation"
+          bankTransactionCode:
+            domainCode: "PMNT"
+            familyCode: "RCDT"
+            subFamilyCode: "DMCT"
+          totalChargesAmount:
+            amount: "10.25"
+            currency: "CHF"
+            chargeRecords:
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+          counterparty:
+            agent:
+              clearingSystemMemberIdentification:
+                code: "CHBCC"
+                memberId: "00230"
+              bic: "bic"
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "Hans Muster"
+            account:
+              identification: "CH9300762011623852957"
+              type: "IBAN"
+          instructedAmount:
+            amount: "10.25"
+            targetCurrency: "USD"
+            exchangeRate: "0.957"
+            sourceCurrency: "CHF"
+            exchangeIndicator: "MULT"
+          endToEndId: "ENDTOENDID-01"
+          transactionId: "TX12345A987"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        - transactionType: "CRDT"
+          amount:
+            amount: "10.25"
+            currency: "CHF"
+          remittanceInformation: "Rechnung Nr. 408"
+          additionalTransactionInformation: "additionalTransactionInformation"
+          bankTransactionCode:
+            domainCode: "PMNT"
+            familyCode: "RCDT"
+            subFamilyCode: "DMCT"
+          totalChargesAmount:
+            amount: "10.25"
+            currency: "CHF"
+            chargeRecords:
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+            - amount: "10.25"
+              chargesIncludedIndicator: true
+              currency: "CHF"
+              type: "Some type of charge"
+          counterparty:
+            agent:
+              clearingSystemMemberIdentification:
+                code: "CHBCC"
+                memberId: "00230"
+              bic: "bic"
+            postalAddress:
+              unstructured:
+                country: "CH"
+                addressLines:
+                - "Robert Schneider SA"
+                - "Rue de la gare 24"
+              structured:
+                country: "CH"
+                streetName: "Rue de la gare"
+                townName: "Biel"
+                buildingNumber: "24"
+                postCode: "2501"
+            name: "Hans Muster"
+            account:
+              identification: "CH9300762011623852957"
+              type: "IBAN"
+          instructedAmount:
+            amount: "10.25"
+            targetCurrency: "USD"
+            exchangeRate: "0.957"
+            sourceCurrency: "CHF"
+            exchangeIndicator: "MULT"
+          endToEndId: "ENDTOENDID-01"
+          transactionId: "TX12345A987"
+          remittanceReference:
+            reference: "210000000003139471430009017"
+            type: "SCOR"
+        entryId: "ENTRY123456789"
+        transactionType: "CRDT"
+        entryReferenceInternalId: "010001628"
+        totalChargesAmount:
+          amount: "10.25"
+          currency: "CHF"
+          chargeRecords:
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+        additionalEntryInformation: "additionalEntryInformation"
+        bookingDate: "2018-10-29"
+        instructedAmount:
+          amount: "10.25"
+          targetCurrency: "USD"
+          exchangeRate: "0.957"
+          sourceCurrency: "CHF"
+          exchangeIndicator: "MULT"
+        entryReference: "10001628"
+      _links:
+        balance: "/accounts/550e8400e29b11d4a716446655440000/balance"
+        self: "/accounts/550e8400e29b11d4a716446655440000/statements"
+        account: "/accounts/550e8400e29b11d4a716446655440000"
+      iban: "CH5481230000001998736"
+      designation: "Checking Account"
+  accountTransactionEntry:
+    type: "object"
+    required:
+    - "amount"
+    - "bankTransactionCode"
+    - "bookingDate"
+    - "entryId"
+    - "transactionType"
+    - "valueDate"
+    properties:
+      entryId:
+        type: "string"
+        example: "ENTRY123456789"
+      transactionType:
+        $ref: "#/definitions/accountTransactionTransactionType"
+      entryReference:
+        type: "string"
+        example: "10001628"
+      entryReferenceInternalId:
+        type: "string"
+        example: "010001628"
+      reversalIndicator:
+        type: "boolean"
+      bookingDate:
+        type: "string"
+        format: "date"
+        example: "2018-10-29"
+      valueDate:
+        type: "string"
+        format: "date"
+        example: "2018-10-29"
+      amount:
+        $ref: "#/definitions/paymentCurrencyAmount"
+      instructedAmount:
+        $ref: "#/definitions/accountTransactionInstructedAmount"
+      totalChargesAmount:
+        $ref: "#/definitions/accountTransactionItemCharges"
+      bankTransactionCode:
+        $ref: "#/definitions/accountTransactionBankTransactionCode"
+      additionalEntryInformation:
+        type: "string"
+      transactions:
+        type: "array"
+        items:
+          $ref: "#/definitions/accountTransactionItem"
+    title: "Account Transaction Entry"
+    example:
+      reversalIndicator: true
+      amount:
+        amount: "10.25"
+        currency: "CHF"
+      bankTransactionCode:
+        domainCode: "PMNT"
+        familyCode: "RCDT"
+        subFamilyCode: "DMCT"
+      valueDate: "2018-10-29"
+      transactions:
+      - transactionType: "CRDT"
+        amount:
+          amount: "10.25"
+          currency: "CHF"
+        remittanceInformation: "Rechnung Nr. 408"
+        additionalTransactionInformation: "additionalTransactionInformation"
+        bankTransactionCode:
+          domainCode: "PMNT"
+          familyCode: "RCDT"
+          subFamilyCode: "DMCT"
+        totalChargesAmount:
+          amount: "10.25"
+          currency: "CHF"
+          chargeRecords:
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+        counterparty:
+          agent:
+            clearingSystemMemberIdentification:
+              code: "CHBCC"
+              memberId: "00230"
+            bic: "bic"
+          postalAddress:
+            unstructured:
+              country: "CH"
+              addressLines:
+              - "Robert Schneider SA"
+              - "Rue de la gare 24"
+            structured:
+              country: "CH"
+              streetName: "Rue de la gare"
+              townName: "Biel"
+              buildingNumber: "24"
+              postCode: "2501"
+          name: "Hans Muster"
+          account:
+            identification: "CH9300762011623852957"
+            type: "IBAN"
+        instructedAmount:
+          amount: "10.25"
+          targetCurrency: "USD"
+          exchangeRate: "0.957"
+          sourceCurrency: "CHF"
+          exchangeIndicator: "MULT"
+        endToEndId: "ENDTOENDID-01"
+        transactionId: "TX12345A987"
+        remittanceReference:
+          reference: "210000000003139471430009017"
+          type: "SCOR"
+      - transactionType: "CRDT"
+        amount:
+          amount: "10.25"
+          currency: "CHF"
+        remittanceInformation: "Rechnung Nr. 408"
+        additionalTransactionInformation: "additionalTransactionInformation"
+        bankTransactionCode:
+          domainCode: "PMNT"
+          familyCode: "RCDT"
+          subFamilyCode: "DMCT"
+        totalChargesAmount:
+          amount: "10.25"
+          currency: "CHF"
+          chargeRecords:
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+          - amount: "10.25"
+            chargesIncludedIndicator: true
+            currency: "CHF"
+            type: "Some type of charge"
+        counterparty:
+          agent:
+            clearingSystemMemberIdentification:
+              code: "CHBCC"
+              memberId: "00230"
+            bic: "bic"
+          postalAddress:
+            unstructured:
+              country: "CH"
+              addressLines:
+              - "Robert Schneider SA"
+              - "Rue de la gare 24"
+            structured:
+              country: "CH"
+              streetName: "Rue de la gare"
+              townName: "Biel"
+              buildingNumber: "24"
+              postCode: "2501"
+          name: "Hans Muster"
+          account:
+            identification: "CH9300762011623852957"
+            type: "IBAN"
+        instructedAmount:
+          amount: "10.25"
+          targetCurrency: "USD"
+          exchangeRate: "0.957"
+          sourceCurrency: "CHF"
+          exchangeIndicator: "MULT"
+        endToEndId: "ENDTOENDID-01"
+        transactionId: "TX12345A987"
+        remittanceReference:
+          reference: "210000000003139471430009017"
+          type: "SCOR"
+      entryId: "ENTRY123456789"
+      transactionType: "CRDT"
+      entryReferenceInternalId: "010001628"
+      totalChargesAmount:
+        amount: "10.25"
+        currency: "CHF"
+        chargeRecords:
+        - amount: "10.25"
+          chargesIncludedIndicator: true
+          currency: "CHF"
+          type: "Some type of charge"
+        - amount: "10.25"
+          chargesIncludedIndicator: true
+          currency: "CHF"
+          type: "Some type of charge"
+      additionalEntryInformation: "additionalEntryInformation"
+      bookingDate: "2018-10-29"
+      instructedAmount:
+        amount: "10.25"
+        targetCurrency: "USD"
+        exchangeRate: "0.957"
+        sourceCurrency: "CHF"
+        exchangeIndicator: "MULT"
+      entryReference: "10001628"
+  accountTransactionItem:
+    type: "object"
+    required:
+    - "amount"
+    - "transactionId"
+    - "transactionType"
+    properties:
+      transactionId:
+        type: "string"
+        example: "TX12345A987"
+      transactionType:
+        $ref: "#/definitions/accountTransactionTransactionType"
+      endToEndId:
+        type: "string"
+        example: "ENDTOENDID-01"
+      bankTransactionCode:
+        $ref: "#/definitions/accountTransactionBankTransactionCode"
+      amount:
+        $ref: "#/definitions/paymentCurrencyAmount"
+      instructedAmount:
+        $ref: "#/definitions/accountTransactionInstructedAmount"
+      totalChargesAmount:
+        $ref: "#/definitions/accountTransactionItemCharges"
+      counterparty:
+        $ref: "#/definitions/accountTransactionCounterparty"
+      remittanceInformation:
+        $ref: "#/definitions/paymentRemittanceInformation"
+      remittanceReference:
+        $ref: "#/definitions/accountTransactionRemittanceReference"
+      additionalTransactionInformation:
+        type: "string"
+    title: "Account Transaction Item"
+    example:
+      transactionType: "CRDT"
+      amount:
+        amount: "10.25"
+        currency: "CHF"
+      remittanceInformation: "Rechnung Nr. 408"
+      additionalTransactionInformation: "additionalTransactionInformation"
+      bankTransactionCode:
+        domainCode: "PMNT"
+        familyCode: "RCDT"
+        subFamilyCode: "DMCT"
+      totalChargesAmount:
+        amount: "10.25"
+        currency: "CHF"
+        chargeRecords:
+        - amount: "10.25"
+          chargesIncludedIndicator: true
+          currency: "CHF"
+          type: "Some type of charge"
+        - amount: "10.25"
+          chargesIncludedIndicator: true
+          currency: "CHF"
+          type: "Some type of charge"
+      counterparty:
+        agent:
+          clearingSystemMemberIdentification:
+            code: "CHBCC"
+            memberId: "00230"
+          bic: "bic"
+        postalAddress:
+          unstructured:
+            country: "CH"
+            addressLines:
+            - "Robert Schneider SA"
+            - "Rue de la gare 24"
+          structured:
+            country: "CH"
+            streetName: "Rue de la gare"
+            townName: "Biel"
+            buildingNumber: "24"
+            postCode: "2501"
+        name: "Hans Muster"
+        account:
+          identification: "CH9300762011623852957"
+          type: "IBAN"
+      instructedAmount:
+        amount: "10.25"
+        targetCurrency: "USD"
+        exchangeRate: "0.957"
+        sourceCurrency: "CHF"
+        exchangeIndicator: "MULT"
+      endToEndId: "ENDTOENDID-01"
+      transactionId: "TX12345A987"
+      remittanceReference:
+        reference: "210000000003139471430009017"
+        type: "SCOR"
+  accountTransactionItemCharges:
+    type: "object"
+    required:
+    - "amount"
+    - "currency"
+    properties:
+      amount:
+        type: "string"
+        example: "10.25"
+        maxLength: 18
+        pattern: "[0-9]{1,12}([.][0-9]{1,5})?"
+      currency:
+        type: "string"
+        example: "CHF"
+      chargeRecords:
+        type: "array"
+        items:
+          $ref: "#/definitions/accountTransactionItemChargesRecord"
+    title: "Account Transaction Item Charges"
+    example:
+      amount: "10.25"
+      currency: "CHF"
+      chargeRecords:
+      - amount: "10.25"
+        chargesIncludedIndicator: true
+        currency: "CHF"
+        type: "Some type of charge"
+      - amount: "10.25"
+        chargesIncludedIndicator: true
+        currency: "CHF"
+        type: "Some type of charge"
+  accountTransactionItemChargesRecord:
+    type: "object"
+    properties:
+      amount:
+        type: "string"
+        example: "10.25"
+        maxLength: 18
+        pattern: "[0-9]{1,12}([.][0-9]{1,5})?"
+      currency:
+        type: "string"
+        example: "CHF"
+        maxLength: 3
+      type:
+        type: "string"
+        example: "Some type of charge"
+        maxLength: 35
+      chargesIncludedIndicator:
+        type: "boolean"
+    title: "Account Transaction Item Charges Record"
+    example:
+      amount: "10.25"
+      chargesIncludedIndicator: true
+      currency: "CHF"
+      type: "Some type of charge"
+  accountTransactionCounterparty:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Hans Muster"
+      postalAddress:
+        $ref: "#/definitions/commonStructuredOrUnstructuredAddress"
+      account:
+        $ref: "#/definitions/accountTransactionCounterpartyAccount"
+      agent:
+        $ref: "#/definitions/accountTransactionCounterpartyAgent"
+    title: "Account Transaction Counterparty"
+    example:
+      agent:
+        clearingSystemMemberIdentification:
+          code: "CHBCC"
+          memberId: "00230"
+        bic: "bic"
+      postalAddress:
+        unstructured:
+          country: "CH"
+          addressLines:
+          - "Robert Schneider SA"
+          - "Rue de la gare 24"
+        structured:
+          country: "CH"
+          streetName: "Rue de la gare"
+          townName: "Biel"
+          buildingNumber: "24"
+          postCode: "2501"
+      name: "Hans Muster"
+      account:
+        identification: "CH9300762011623852957"
+        type: "IBAN"
+  accountTransactionCounterpartyAgent:
+    type: "object"
+    properties:
+      bic:
+        type: "string"
+      clearingSystemMemberIdentification:
+        $ref: "#/definitions/commonClearingSystemMemberIdentification"
+    title: "Account Transaction Counterparty Agent"
+    example:
+      clearingSystemMemberIdentification:
+        code: "CHBCC"
+        memberId: "00230"
+      bic: "bic"
+  accountTransactionInstructedAmount:
+    type: "object"
+    required:
+    - "amount"
+    - "sourceCurrency"
+    - "targetCurrency"
+    properties:
+      amount:
+        type: "string"
+        example: "10.25"
+        maxLength: 18
+        pattern: "[0-9]{1,12}([.][0-9]{1,5})?"
+      sourceCurrency:
+        type: "string"
+        example: "CHF"
+      targetCurrency:
+        type: "string"
+        example: "USD"
+      exchangeRate:
+        type: "string"
+        example: "0.957"
+      exchangeIndicator:
+        type: "string"
+        example: "MULT"
+    title: "Account Transaction Instructed Amount"
+    example:
+      amount: "10.25"
+      targetCurrency: "USD"
+      exchangeRate: "0.957"
+      sourceCurrency: "CHF"
+      exchangeIndicator: "MULT"
+  accountTransactionBankTransactionCode:
+    type: "object"
+    required:
+    - "domainCode"
+    - "familyCode"
+    - "subFamilyCode"
+    properties:
+      domainCode:
+        type: "string"
+        example: "PMNT"
+      familyCode:
+        type: "string"
+        example: "RCDT"
+      subFamilyCode:
+        type: "string"
+        example: "DMCT"
+    title: "Account Transaction Bank Transaction Code"
+    example:
+      domainCode: "PMNT"
+      familyCode: "RCDT"
+      subFamilyCode: "DMCT"
+  accountTransactionTransactionType:
+    type: "string"
+    title: "Account Transaction Transaction Type"
+    example: "CRDT"
+    enum:
+    - "CRDT"
+    - "DBIT"
+  accountTransactionCounterpartyAccount:
+    type: "object"
+    required:
+    - "identification"
+    - "type"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "IBAN"
+        - "OTHER"
+      identification:
+        type: "string"
+        example: "CH9300762011623852957"
+        maxLength: 34
+    title: "Account Transaction Counterparty Account"
+    example:
+      identification: "CH9300762011623852957"
+      type: "IBAN"
+  accountTransactionRemittanceReference:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "SCOR"
+        - "ISR"
+        - "QRR"
+      reference:
+        type: "string"
+        example: "210000000003139471430009017"
+        maxLength: 35
+    title: "Account Transaction Remittance Reference"
+    example:
+      reference: "210000000003139471430009017"
+      type: "SCOR"
+  consentItem:
+    type: "object"
+    properties:
+      useCase:
+        type: "string"
+        example: "ais"
+      accounts:
+        type: "array"
+        items:
+          $ref: "#/definitions/consentAccountItem"
+    title: "Consent Item"
+    example:
+      useCase: "ais"
+      accounts:
+      - allowedCurrencies:
+        - "CHF"
+        - "CHF"
+        accountId: "13579"
+        iban: "CH123131231231231"
+        currency: "CHF"
+        designation: "Savings ABC"
+      - allowedCurrencies:
+        - "CHF"
+        - "CHF"
+        accountId: "13579"
+        iban: "CH123131231231231"
+        currency: "CHF"
+        designation: "Savings ABC"
+  consentAccountItem:
+    type: "object"
+    required:
+    - "accountId"
+    - "iban"
+    properties:
+      accountId:
+        type: "string"
+        example: "13579"
+      iban:
+        type: "string"
+        example: "CH123131231231231"
+      currency:
+        type: "string"
+        example: "CHF"
+      designation:
+        type: "string"
+        example: "Savings ABC"
+      allowedCurrencies:
+        type: "array"
+        items:
+          type: "string"
+          example: "CHF"
+    title: "Consent Account Item"
+    example:
+      allowedCurrencies:
+      - "CHF"
+      - "CHF"
+      accountId: "13579"
+      iban: "CH123131231231231"
+      currency: "CHF"
+      designation: "Savings ABC"
+  directoryClientItem:
+    title: "Directory Client Item"
+    allOf:
+    - type: "object"
+      required:
+      - "clientConsentBackendUrl"
+      - "clientId"
+      - "clientRedirectionEndpointUrl"
+      properties:
+        clientId:
+          type: "string"
+          example: "1234"
+        clientConsentBackendUrl:
+          type: "string"
+          example: "https://www.acme.com/consent"
+        clientRedirectionEndpointUrl:
+          type: "string"
+          example: "https://www.acme.com/start"
+    - $ref: "#/definitions/directoryParticipantItem"
+  directoryProviderItem:
+    title: "Directory Provider Item"
+    allOf:
+    - type: "object"
+      required:
+      - "providerAuthEndpointUrl"
+      - "providerId"
+      properties:
+        providerId:
+          type: "string"
+          example: "1234"
+        providerAuthEndpointUrl:
+          type: "string"
+          example: "https://www.acme.com/oauth/authorize"
+    - $ref: "#/definitions/directoryParticipantItem"
+  directoryParticipantItem:
+    type: "object"
+    required:
+    - "companyLogo"
+    - "companyName"
+    - "companyUrl"
+    - "contact"
+    - "lastModified"
+    - "marketingDescription"
+    - "registrationDate"
+    - "shortDescription"
+    - "software"
+    - "status"
+    properties:
+      companyName:
+        type: "string"
+        example: "ACME"
+        maxLength: 50
+      contact:
+        type: "array"
+        example:
+        - type: "BUSINESS"
+          designation: "Account and Payments Services"
+          emailAddress: "business-contact@acme.com"
+        - type: "TECHNICAL"
+          emailAddress: "technical-contact@acme.com"
+          phone: "+41 58 999 9999"
+        items:
+          $ref: "#/definitions/directoryContact"
+      companyLogo:
+        $ref: "#/definitions/directoryMultisizeImageReference"
+      marketingImage:
+        $ref: "#/definitions/directoryImageReference"
+      companyUrl:
+        type: "string"
+        example: "https://www.acme.com"
+      marketingDescription:
+        $ref: "#/definitions/directoryMarketingDescription"
+      shortDescription:
+        $ref: "#/definitions/directoryShortDescription"
+      status:
+        $ref: "#/definitions/directoryParticipantStatus"
+      registrationDate:
+        type: "string"
+        format: "date"
+        example: "2018-10-11"
+      lastModified:
+        type: "string"
+        format: "date-time"
+        example: "2018-11-11T12:39:23+01:00"
+      software:
+        $ref: "#/definitions/directorySoftwareDescription"
+      useCases:
+        type: "array"
+        items:
+          $ref: "#/definitions/directoryUseCaseItem"
+        minItems: 0
+    title: "Directory Participant Item"
+  directoryContact:
+    type: "object"
+    required:
+    - "emailAddress"
+    - "type"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "BUSINESS"
+        - "TECHNICAL"
+      designation:
+        type: "string"
+        maxLength: 80
+      emailAddress:
+        type: "string"
+        format: "email"
+        maxLength: 50
+      phone:
+        type: "string"
+        maxLength: 20
+    title: "Directory Contact"
+  directorySoftwareDescription:
+    type: "object"
+    required:
+    - "category"
+    - "manufacturer"
+    - "marketingDescription"
+    - "productInfoUrl"
+    - "productLogo"
+    - "productName"
+    - "shortDescription"
+    properties:
+      productName:
+        $ref: "#/definitions/directoryProductName"
+      manufacturer:
+        type: "string"
+        example: "ACME Corp."
+        maxLength: 50
+      category:
+        type: "array"
+        example:
+        - "ACCOUNTING"
+        items:
+          type: "string"
+          enum:
+          - "ACCOUNTING"
+        minItems: 1
+      productInfoUrl:
+        type: "string"
+        example: "https://acme.com/amce_accounting"
+      productLogo:
+        $ref: "#/definitions/directoryMultisizeImageReference"
+      marketingImage:
+        $ref: "#/definitions/directoryImageReference"
+      marketingDescription:
+        $ref: "#/definitions/directoryMarketingDescription"
+      shortDescription:
+        $ref: "#/definitions/directoryShortDescription"
+    title: "Directory Software Description"
+  directoryMarketingDescription:
+    type: "object"
+    required:
+    - "de"
+    - "en"
+    - "fr"
+    - "it"
+    properties:
+      de:
+        type: "array"
+        items:
+          type: "string"
+          maxLength: 140
+      en:
+        type: "array"
+        items:
+          type: "string"
+          maxLength: 140
+      fr:
+        type: "array"
+        items:
+          type: "string"
+          maxLength: 140
+      it:
+        type: "array"
+        items:
+          type: "string"
+          maxLength: 140
+    title: "Directory Marketing Description"
+    example:
+      de:
+      - "bullet1"
+      - "bullet2"
+      - "bullet3"
+      - "bullet4"
+      - "bullet5"
+      en:
+      - "bullet1"
+      - "bullet2"
+      - "bullet3"
+      - "bullet4"
+      - "bullet5"
+      fr:
+      - "bullet1"
+      - "bullet2"
+      - "bullet3"
+      - "bullet4"
+      - "bullet5"
+      it:
+      - "bullet1"
+      - "bullet2"
+      - "bullet3"
+      - "bullet4"
+      - "bullet5"
+  directoryShortDescription:
+    type: "object"
+    required:
+    - "de"
+    - "en"
+    - "fr"
+    - "it"
+    properties:
+      de:
+        type: "string"
+        maxLength: 300
+      en:
+        type: "string"
+        maxLength: 300
+      fr:
+        type: "string"
+        maxLength: 300
+      it:
+        type: "string"
+        maxLength: 300
+    title: "Directory Short Description"
+    example:
+      de: "Kurzbeschreibung"
+      en: "Short description"
+      fr: "Description rapide"
+      it: "Corta descrizione"
+  directoryUseCaseItem:
+    type: "object"
+    required:
+    - "from"
+    - "name"
+    - "status"
+    - "version"
+    properties:
+      name:
+        type: "string"
+        example: "ais"
+      version:
+        type: "string"
+        example: "v1"
+      status:
+        type: "string"
+        example: "CERTIFIED"
+        enum:
+        - "ONBOARDING"
+        - "CERTIFIED"
+      from:
+        type: "string"
+        format: "date-time"
+        example: "2018-10-10T:14:00:00+02:00"
+      until:
+        type: "string"
+        format: "date-time"
+        example: "9999-12-31T23:59:59+01:00"
+      properties:
+        type: "object"
+        additionalProperties:
+          type: "string"
+    title: "Directory Use Case Information"
+  directoryProductName:
+    type: "object"
+    required:
+    - "de"
+    - "en"
+    - "fr"
+    - "it"
+    properties:
+      de:
+        type: "string"
+        maxLength: 50
+      en:
+        type: "string"
+        maxLength: 50
+      fr:
+        type: "string"
+        maxLength: 50
+      it:
+        type: "string"
+        maxLength: 50
+    title: "Directory Product Name"
+    example:
+      de: "ACME Buchhaltungssoftware"
+      en: "ACME accounting software"
+      fr: "ACME software comptable"
+      it: "ACME software contabilità"
+  directoryMultisizeImageReference:
+    type: "object"
+    required:
+    - "large"
+    - "small"
+    properties:
+      small:
+        $ref: "#/definitions/directoryImageReference"
+      large:
+        $ref: "#/definitions/directoryImageReference"
+    title: "Directory Multisize Image Reference"
+  directoryParticipantStatus:
+    type: "string"
+    title: "Directory Participant Status"
+    example: "ACTIVE"
+    enum:
+    - "ACTIVE"
+    - "INACTIVE"
+    - "SUSPENDED"
+    - "ONBOARDING"
+  directoryImageReference:
+    type: "object"
+    required:
+    - "image"
+    - "mimeType"
+    properties:
+      mimeType:
+        type: "string"
+        example: "image/png"
+      image:
+        type: "string"
+        format: "byte"
+        example: "QUNNRQ=="
+        pattern: "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+    title: "Directory Image Reference"
+  iso20022ReportReference:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "CAMT53"
+        - "CAMT54"
+      id:
+        type: "string"
+    title: "ISO 20022 Report Reference"
+    example:
+      name: "name"
+      description: "description"
+      id: "id"
+      type: "CAMT53"
+  oauthTokenResponse:
+    type: "object"
+    required:
+    - "access_token"
+    - "token_type"
+    properties:
+      access_token:
+        type: "string"
+      token_type:
+        type: "string"
+        default: "bearer"
+      expires_in:
+        type: "integer"
+        minimum: 1
+      refresh_token:
+        type: "string"
+    title: "oAuth Token Response"
+    example:
+      access_token: "access_token"
+      refresh_token: "refresh_token"
+      token_type: "bearer"
+      expires_in: 1
+  commonClearingSystemMemberIdentification:
+    type: "object"
+    required:
+    - "code"
+    - "memberId"
+    properties:
+      code:
+        type: "string"
+        example: "CHBCC"
+      memberId:
+        type: "string"
+        example: "00230"
+    title: "Common Clearing System Member Identification"
+    example:
+      code: "CHBCC"
+      memberId: "00230"
+  commonStructuredOrUnstructuredAddress:
+    type: "object"
+    properties:
+      structured:
+        $ref: "#/definitions/commonStructuredAddress"
+      unstructured:
+        $ref: "#/definitions/commonUnstructuredAddress"
+    title: "Common Structured or Unstructured Address"
+    example:
+      unstructured:
+        country: "CH"
+        addressLines:
+        - "Robert Schneider SA"
+        - "Rue de la gare 24"
+      structured:
+        country: "CH"
+        streetName: "Rue de la gare"
+        townName: "Biel"
+        buildingNumber: "24"
+        postCode: "2501"
+  commonStructuredAddress:
+    type: "object"
+    required:
+    - "country"
+    - "postCode"
+    - "streetName"
+    - "townName"
+    properties:
+      streetName:
+        type: "string"
+        example: "Rue de la gare"
+        maxLength: 70
+      buildingNumber:
+        type: "string"
+        example: "24"
+        maxLength: 16
+      postCode:
+        type: "string"
+        example: "2501"
+        maxLength: 16
+      townName:
+        type: "string"
+        example: "Biel"
+        maxLength: 35
+      country:
+        type: "string"
+        example: "CH"
+        maxLength: 2
+    title: "Common Structured Postal Address"
+    example:
+      country: "CH"
+      streetName: "Rue de la gare"
+      townName: "Biel"
+      buildingNumber: "24"
+      postCode: "2501"
+  commonUnstructuredAddress:
+    type: "object"
+    required:
+    - "addressLines"
+    - "country"
+    properties:
+      addressLines:
+        type: "array"
+        example:
+        - "Robert Schneider SA"
+        - "Rue de la gare 24"
+        description: "max 2 lines of 35 characters. either postalAdress or adressLines\
+          \ must be set."
+        items:
+          type: "string"
+          maxLength: 70
+      country:
+        type: "string"
+        example: "CH"
+        maxLength: 2
+    title: "Common Unstructured Address"
+    example:
+      country: "CH"
+      addressLines:
+      - "Robert Schneider SA"
+      - "Rue de la gare 24"
+  commonErrorResponse:
+    type: "object"
+    properties:
+      type:
+        $ref: "#/definitions/commonErrorType"
+      title:
+        type: "string"
+        example: "This is the general problem description"
+      detail:
+        type: "string"
+        example: "Detailed problem description with respect to the current request,\
+          \ e.g., invalid account number format"
+      instance:
+        type: "string"
+        example: "path/to/corresponding/resource"
+    title: "Common Error Response"
+  commonErrorType:
+    type: "string"
+    title: "Common Error Type"
+    description: "Error Types for commonErrorResponse. See Appendix for detailed information."
+    example: "/problems/TECHNICAL_ERROR"
+    enum:
+    - "/problems/INVALID_PAYLOAD"
+    - "/problems/MALFORMED_PAYLOAD"
+    - "/problems/INVALID_TOKEN"
+    - "/problems/EXPIRED_TOKEN"
+    - "/problems/INSUFFICIENT_PRIVILEGES"
+    - "/problems/NO_ACCESS_TO_RESOURCE"
+    - "/problems/RESOURCE_DOES_NOT_EXIST"
+    - "/problems/RESOURCE_NOT_READY"
+    - "/problems/RESOURCE_TOO_LARGE"
+    - "/problems/WRONG_METHOD"
+    - "/problems/OPERATION_NOT_ALLOWED"
+    - "/problems/TECHNICAL_ERROR"
+  healthCheckResponse:
+    type: "object"
+    properties:
+      requestDateTime:
+        type: "string"
+        format: "date-time"
+        example: "2018-04-03T07:30:00+01:00"
+        title: "Request Time"
+      receivedHeaders:
+        type: "array"
+        title: "Received Headers"
+        items:
+          $ref: "#/definitions/healthCheckResponse_receivedHeaders"
+      receivedPayload:
+        type: "string"
+        example: "... as received ... "
+        title: "Received Payload"
+    title: "Health Check Response"
+    example:
+      receivedHeaders:
+      - headerName: "X-Correlation-ID"
+        headerValue: "headerValue"
+      - headerName: "X-Correlation-ID"
+        headerValue: "headerValue"
+      receivedPayload: "... as received ... "
+      requestDateTime: "2018-04-03T07:30:00+01:00"
+  accountItem__links:
+    properties:
+      self:
+        type: "string"
+        example: "/accounts/550e8400-e29b-11d4-a716-446655440000"
+      balance:
+        type: "string"
+        example: "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+      transactions:
+        type: "string"
+        example: "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+    description: "Contains the paths to additional resources for specific account\
+      \ (e.g. path to transactions resource)"
+    example:
+      balance: "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+      self: "/accounts/550e8400-e29b-11d4-a716-446655440000"
+      transactions: "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+  accountBalanceItem__links:
+    properties:
+      self:
+        type: "string"
+        example: "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+      account:
+        type: "string"
+        example: "/accounts/550e8400-e29b-11d4-a716-446655440000"
+      transactions:
+        type: "string"
+        example: "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+    description: "contains the paths to additional resources for specific account\
+      \ (e.g. path to transactions resource)"
+    example:
+      self: "/accounts/550e8400-e29b-11d4-a716-446655440000/balance"
+      transactions: "/accounts/550e8400-e29b-11d4-a716-446655440000/transactions"
+      account: "/accounts/550e8400-e29b-11d4-a716-446655440000"
+  accountTransactionReport__links:
+    properties:
+      self:
+        type: "string"
+        example: "/accounts/550e8400e29b11d4a716446655440000/statements"
+      account:
+        type: "string"
+        example: "/accounts/550e8400e29b11d4a716446655440000"
+      balance:
+        type: "string"
+        example: "/accounts/550e8400e29b11d4a716446655440000/balance"
+    example:
+      balance: "/accounts/550e8400e29b11d4a716446655440000/balance"
+      self: "/accounts/550e8400e29b11d4a716446655440000/statements"
+      account: "/accounts/550e8400e29b11d4a716446655440000"
+  healthCheckResponse_receivedHeaders:
+    properties:
+      headerName:
+        type: "string"
+        example: "X-Correlation-ID"
+      headerValue:
+        type: "string"
+        description: "As received"
+    example:
+      headerName: "X-Correlation-ID"
+      headerValue: "headerValue"
+parameters:
+  path_clientId:
+    name: "clientId"
+    in: "path"
+    description: "id of the client"
+    required: true
+    type: "string"
+    maxLength: 30
+  path_providerId:
+    name: "providerId"
+    in: "path"
+    description: "id of the provider"
+    required: true
+    type: "string"
+    maxLength: 30
+  path_submissionId:
+    name: "submissionId"
+    in: "path"
+    description: "id of payment submission"
+    required: true
+    type: "string"
+    maxLength: 30
+  path_reportId:
+    name: "reportId"
+    in: "path"
+    description: "id of report"
+    required: true
+    type: "string"
+    maxLength: 30
+  path_accountId:
+    name: "accountId"
+    in: "path"
+    description: "id of account"
+    required: true
+    type: "string"
+    maxLength: 30
+  query_date:
+    name: "date"
+    in: "query"
+    description: "The date to query, formatted as yyyy-mm-dd."
+    required: false
+    type: "string"
+    default: "the current date"
+    format: "date"
+  query_participant_status:
+    name: "status"
+    in: "query"
+    description: "status=ACTIVE returns only active clients"
+    required: false
+    type: "string"
+    default: "ACTIVE"
+    enum:
+    - "ACTIVE"
+    - "INACTIVE"
+    - "SUSPENDED"
+    - "ONBOARDING"
+  targetid_in_header:
+    name: "X-CorAPI-Target-ID"
+    in: "header"
+    description: "ID that identifies the provider (e.g., a financial institution).\
+      \ (SCOPE: SIX)"
+    required: true
+    type: "string"
+  clientid_in_header:
+    name: "X-CorAPI-Client-ID"
+    in: "header"
+    description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+    required: true
+    type: "string"
+  authorization_in_header:
+    name: "Authorization"
+    in: "header"
+    description: "Bearer followed by a base64 encoded OAuth access token"
+    required: true
+    type: "string"
+  correlation_in_header:
+    name: "X-Correlation-ID"
+    in: "header"
+    description: "Unique ID (defined by the caller) which will be reflected back in\
+      \ the response."
+    required: true
+    type: "string"
+  agent_in_header:
+    name: "User-Agent"
+    in: "header"
+    description: "Name and version of the of the Client software"
+    required: true
+    type: "string"
+  psu_ip_in_header:
+    name: "X-PSU-IP-Address"
+    in: "header"
+    description: "IP address of the user initiating the operation"
+    required: true
+    type: "string"
+  psu_user_agent_in_header:
+    name: "X-PSU-User-Agent"
+    in: "header"
+    description: "User agent of the user initiating the operation"
+    required: true
+    type: "string"
+  healthcheck_targetid_in_header:
+    name: "X-CorAPI-Target-ID"
+    in: "header"
+    description: "ID of the target, e.g., a financial institution. (SCOPE: SIX)"
+    required: false
+    type: "string"
+  healthcheck_authorization_in_header:
+    name: "Authorization"
+    in: "header"
+    description: "Bearer followed by a base64 encoded OAuth access token"
+    required: false
+    type: "string"
+  healthcheck_clientid_in_header:
+    name: "X-CorAPI-Client-ID"
+    in: "header"
+    description: "ID of the client forwarded to the provider. (SCOPE: FI)"
+    required: false
+    type: "string"
+  healthcheck_correlation_in_header:
+    name: "X-Correlation-ID"
+    in: "header"
+    description: "Unique ID (defined by the caller) which will be reflected back in\
+      \ the response."
+    required: false
+    type: "string"
+  healthcheck_agent_in_header:
+    name: "User-Agent"
+    in: "header"
+    description: "Name and version of the of the client software"
+    required: false
+    type: "string"
+  healthcheck_psu_ip_in_header:
+    name: "X-PSU-IP-Address"
+    in: "header"
+    description: "IP address of the user initiating the operation"
+    required: false
+    type: "string"
+  healthcheck_psu_user_agent_in_header:
+    name: "X-PSU-User-Agent"
+    in: "header"
+    description: "User of the client software"
+    required: false
+    type: "string"
+responses:
+  standard400:
+    description: "Bad Request - The format of the request was invalid."
+    headers:
+      Content-Type:
+        type: "string"
+        description: "application/problem+json according to RFC7807"
+      Content-Encoding:
+        type: "string"
+        description: "always UTF-8"
+      Content-Language:
+        type: "string"
+        description: "always en"
+      X-Correlation-ID:
+        type: "string"
+        description: "Reflected client defined ID from request."
+    schema:
+      $ref: "#/definitions/commonErrorResponse"
+  standard401:
+    description: "Unauthorized - Either no token or an invalid (e.g., token expired)\
+      \ token was received."
+    headers:
+      Content-Type:
+        type: "string"
+        description: "application/problem+json according to RFC7807"
+      Content-Encoding:
+        type: "string"
+        description: "always UTF-8"
+      Content-Language:
+        type: "string"
+        description: "always en"
+      X-Correlation-ID:
+        type: "string"
+        description: "Reflected client defined ID from request."
+    schema:
+      $ref: "#/definitions/commonErrorResponse"
+  standard403:
+    description: "Forbidden - A valid OAuth Token was received, but access was denied."
+    headers:
+      Content-Type:
+        type: "string"
+        description: "application/problem+json according to RFC7807"
+      Content-Encoding:
+        type: "string"
+        description: "always UTF-8"
+      Content-Language:
+        type: "string"
+        description: "always en"
+      X-Correlation-ID:
+        type: "string"
+        description: "Reflected client defined ID from request."
+    schema:
+      $ref: "#/definitions/commonErrorResponse"
+  standard404:
+    description: "Not Found - Either the endpoint does not exist or a requested resource\
+      \ is not yet available (e.g., account statements)"
+    headers:
+      Content-Type:
+        type: "string"
+        description: "application/problem+json according to RFC7807"
+      Content-Encoding:
+        type: "string"
+        description: "always UTF-8"
+      Content-Language:
+        type: "string"
+        description: "always en"
+      X-Correlation-ID:
+        type: "string"
+        description: "Reflected client defined ID from request."
+    schema:
+      $ref: "#/definitions/commonErrorResponse"
+  standard405:
+    description: "Method Not Allowed"
+    headers:
+      Content-Type:
+        type: "string"
+        description: "application/problem+json according to RFC7807"
+      Content-Encoding:
+        type: "string"
+        description: "always UTF-8"
+      Content-Language:
+        type: "string"
+        description: "always en"
+      X-Correlation-ID:
+        type: "string"
+        description: "Reflected client defined ID from request."
+    schema:
+      $ref: "#/definitions/commonErrorResponse"
+  standard500:
+    description: "Internal Server Error"
+    headers:
+      Content-Type:
+        type: "string"
+        description: "application/problem+json according to RFC7807"
+      Content-Encoding:
+        type: "string"
+        description: "always UTF-8"
+      Content-Language:
+        type: "string"
+        description: "always en"
+      X-Correlation-ID:
+        type: "string"
+        description: "Reflected client defined ID from request."
+    schema:
+      $ref: "#/definitions/commonErrorResponse"
