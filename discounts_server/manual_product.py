@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 
 
@@ -20,6 +21,7 @@ def moroccan_tea():
       'type': 'product',
       'price': 16.0,
       'original_price': 17.2}
+
     tea_json = json.dumps(tea_dict)
     return tea_json
 

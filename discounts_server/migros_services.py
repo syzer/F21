@@ -29,6 +29,7 @@ def get_products(limit=20):
     response = requests.get('https://web-api.migros.ch/widgets/product_fragments_json', headers=headers, params=params)
     return response
 
+
 def get_ratings(item_ids):
     """
     Returns the ratings for the given products
