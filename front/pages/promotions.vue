@@ -24,33 +24,8 @@
             </button>
             <modal name="example">
               <div class="basic-modal">
-                <div
-                  v-for="({ name, price_info, image, description },
-                  index) in discounts"
-                  :key="index"
-                >
-                  <h3>{{ name }}</h3>
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-6">
-                        <img :src="image.src" />
-                      </div>
-                      <div class="col-6"></div>
-                    </div>
-                    <div class="row">
-                      <div class="col-12">
-                        <h3>{{ name }}</h3>
-                      </div>
-                    </div>
-                    <div class="row col-12">
-                      <div class="col-6">
-                        {{ description }}
-                      </div>
-                      <div class="col-6">
-                        {{ price_info.price }}
-                      </div>
-                    </div>
-                  </div>
+                <div v-for="(discount, index) in discounts" :key="index">
+                  <Promotion :discount="discount" />
                 </div>
                 <button
                   class="button button--grey"
@@ -69,13 +44,15 @@
 </template>
 <script>
 import Logo from '~/components/Logo.vue'
+import Promotion from '~/components/Promotion.vue'
 import Navbar from '~/components/Navbar.vue'
 import 'vue-thin-modal/dist/vue-thin-modal.css'
 
 export default {
   components: {
     Logo,
-    Navbar
+    Navbar,
+    Promotion
   },
   computed: {
     counter() {
