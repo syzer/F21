@@ -20,12 +20,34 @@
           </a>
           <div>
             <button type="button" class="button--grey" @click="open">
-              Open Modal
+              Show promotion
             </button>
             <modal name="example">
               <div class="basic-modal">
-                <h1 class="title">Modal Title</h1>
-                <button class="button button--grey" type="button" @click="close">
+                <h3>{{ discounts[0].name }}</h3>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-6">
+                      <img src="siroco.jpg" />
+                    </div>
+                    <div class="col-6"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <h3>{{ discounts[0].name }}</h3>
+                    </div>
+                  </div>
+                  <div class="row col-12">
+                    <div class="col-6">
+                      {{ discounts[0].description }}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="button button--grey"
+                  type="button"
+                  @click="close"
+                >
                   Close Modal
                 </button>
               </div>
@@ -49,15 +71,12 @@ export default {
   computed: {
     counter() {
       return this.$store.state.counter
+    },
+    discounts() {
+      return this.$store.state.discounts
     }
   },
   methods: {
-    // show() {
-    //   this.$modal.show('hello-world')
-    // },
-    // hide() {
-    //   this.$modal.hide('hello-world')
-    // },
     open() {
       this.$modal.push('example')
     },
