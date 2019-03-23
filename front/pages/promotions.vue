@@ -28,7 +28,7 @@
                 <div class="container">
                   <div class="row">
                     <div class="col-6">
-                      <img src="siroco.jpg" />
+                      <img :src="discounts[0].image.src" />
                     </div>
                     <div class="col-6"></div>
                   </div>
