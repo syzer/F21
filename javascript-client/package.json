@@ -1,0 +1,21 @@
+{
+  "name": "swiss_corporate_api",
+  "version": "1.0.0.2-SNAPSHOT",
+  "description": "This_is_the_release_candidate_version_of_the_Swiss_Corporate_API_specification_",
+  "license": "Unlicense",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --recursive"
+  },
+  "browser": {
+    "fs": false
+  },
+  "dependencies": {
+    "superagent": "3.7.0"
+  },
+  "devDependencies": {
+    "mocha": "~2.3.4",
+    "sinon": "1.17.3",
+    "expect.js": "~0.3.1"
+  }
+}
