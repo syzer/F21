@@ -54,6 +54,7 @@
         "currency" : "CHF",
         "amount" : "217.20"
       },
+      "additionalEntryInformation" : "Ski boots ",
       "transactions" : [
         {
           "transactionId" : "trx223456789-01",
@@ -66,15 +67,7 @@
             "amount" : "217.20"
           },
           "counterparty" : {
-            "name" : "A. Kuster Sirocco AG",
-            "postalAddress" : {
-              "structured" : {
-                "streetName" : "Hauptstrasse 22",
-                "postCode" : "8716",
-                "townName" : "Schmerikon",
-                "country" : "PL"
-              }
-            },
+            "name" : "Ochsner Sport",
             "account" : {
               "type" : "MASTERCARD",
               "identification" : "7910 5015 75100 0002"
@@ -93,20 +86,19 @@
       },
       "amount" : {
         "currency" : "CHF",
-        "amount" : "120000"
+        "amount" : "12000"
       },
-      "additionalEntryInformation" : "Buying a plane ",
+      "additionalEntryInformation" : "Pilot license ",
       "transactions" : [
         {
           "transactionId" : "trx323456789-01",
           "transactionType" : "DBIT",
-          "endToEndId" : "endToEndId-01",
           "bankTransactionCode" : {
             "domainCode" : "VISECA"
           },
           "amount" : {
             "currency" : "CHF",
-            "amount" : "120000"
+            "amount" : "12000"
           },
           "counterparty" : {
             "name" : "Aero Club der Schweiz",
@@ -122,7 +114,39 @@
           }
         }
       ]
+    },
+    {
+      "entryId" : "ENTRY423456789",
+      "transactionType" : "DBIT",
+      "bookingDate" : "2018-10-10",
+      "valueDate" : "2018-10-010",
+      "bankTransactionCode" : {
+        "domainCode" : "VISECA"
+      },
+      "amount" : {
+        "currency" : "CHF",
+        "amount" : "400"
+      },
+      "additionalEntryInformation" : "Buying a relaxation chair ",
+      "transactions" : [
+        {
+          "transactionId" : "trx423456789-01",
+          "transactionType" : "DBIT",
+          "bankTransactionCode" : {
+            "domainCode" : "VISECA"
+          },
+          "amount" : {
+            "currency" : "CHF",
+            "amount" : "400"
+          },
+          "counterparty" : {
+            "name" : "Micasa"
+            }
+          }
+        }
+      ]
     }
+
   ],
   "_links" : {
     "self" : "/accounts/550e8400e29b11d4a716446655440000/transactions",
