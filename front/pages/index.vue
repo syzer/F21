@@ -16,17 +16,30 @@
             target="_blank"
             class="button--grey"
           >
-            See nearby discounts </a
-          >
+            See nearby discounts
+          </a>
+          <div>
+            <button type="button" class="button--grey" @click="open">
+              Open Modal
+            </button>
+            <modal name="example">
+              <div class="basic-modal">
+                <h1 class="title">Modal Title</h1>
+                <button class="button button--grey" type="button" @click="close">
+                  Close Modal
+                </button>
+              </div>
+            </modal>
+          </div>
         </div>
       </div>
     </section>
   </section>
 </template>
 <script>
-// import { mapMutations } from 'vuex'
 import Logo from '~/components/Logo.vue'
 import Navbar from '~/components/Navbar.vue'
+import 'vue-thin-modal/dist/vue-thin-modal.css'
 
 export default {
   components: {
@@ -36,6 +49,21 @@ export default {
   computed: {
     counter() {
       return this.$store.state.counter
+    }
+  },
+  methods: {
+    // show() {
+    //   this.$modal.show('hello-world')
+    // },
+    // hide() {
+    //   this.$modal.hide('hello-world')
+    // },
+    open() {
+      this.$modal.push('example')
+    },
+
+    close() {
+      this.$modal.pop()
     }
   }
 }
