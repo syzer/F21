@@ -56,5 +56,3 @@ def get_ratings(item_ids):
     json_response = json.loads(response.text)
     return json_response
 
-
-print(get_products(50))
