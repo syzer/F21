@@ -6,10 +6,10 @@
         <h5 class="title">Welcome {{ name }}</h5>
         <b-form-group label="You are interested in recommendations for ">
           <b-form-checkbox-group
-            v-model="selected"
-            checked=""
+            switches
+            v-model="checked"
             stacked
-            name="flavour2a"
+            name="check-button"
             :options="options"
           />
         </b-form-group>
