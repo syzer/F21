@@ -1,13 +1,13 @@
 # Ftontend TODOS
 
-#TODOS
-- [ ] Fake puchase history single user
-- [ ] Recomeender
+# TODOS
+- [ ] Fake purchase history single user
+- [ ] Recommender
 - [ANIL] Extract (or show extraction of discounts)
 - [LUKAS] GPS location tracking
 - [LUKAS] Push info
-- [ANIL] Show it’s runnig on six/postfinance
-(screenshoot)
+- [ANIL] Show it’s running on six/PostFinance
+(screenshot)
 - [TOBI] Fake payment data
 [ ]
 
