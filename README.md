@@ -47,7 +47,7 @@ $ cd discounts_server
 ```bash
 $ export FLASK_APP=server.py 
 ```
-3. Run the flask server
+3. Run the flask server :ghost:
 ```bash
 $ flask run 
 ```
