@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="konva.min.js"></script>
+  <meta charset="utf-8"/>
+  <title>AI powered matching</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+<div id="container"></div>
+<script>
+  let width = window.innerWidth
+  let height = window.innerHeight
+
+  Konva.angleDeg = false
+  let angularVelocity = 6
+  let angularVelocities = []
+  let lastRotation = 0
+  let controlled = false
+  let numWedges = 25
+  let angularFriction = 0.2
+  let target, activeWedge, stage, layer, wheel, pointer
+  let finished = false
+
+  function getAverageAngularVelocity() {
+    let total = 0
+    let len = angularVelocities.length
+
+    if (len === 0) {
+      return 0
+    }
+
+    for (let n = 0; n < len; n++) {
+      total += angularVelocities[n]
+    }
+
+    return total / len
+  }
+
+  function purifyColor(color) {
+    let randIndex = Math.round(Math.random() * 3)
+    color[randIndex] = 0
+    return color
+  }
+
+  function getRandomColor() {
+    let r = 100 + Math.round(Math.random() * 55)
+    let g = 100 + Math.round(Math.random() * 55)
+    let b = 100 + Math.round(Math.random() * 55)
+    return purifyColor([r, g, b])
+  }
+
+  function getRandomReward() {
+    let mainDigit = Math.round(Math.random() * 9)
+    return mainDigit + '\n0\n0'
+  }
+
+  function addWedge(n) {
+    let s = getRandomColor()
+    let reward = getRandomReward()
+    let r = s[0]
+    let g = s[1]
+    let b = s[2]
+    let angle = (2 * Math.PI) / numWedges
+
+    let endColor = 'rgb(' + r + ',' + g + ',' + b + ')'
+    r += 100
+    g += 100
+    b += 100
+
+    let startColor = 'rgb(' + r + ',' + g + ',' + b + ')'
+
+    let wedge = new Konva.Group({
+      rotation: (2 * n * Math.PI) / numWedges
+    })
+
+    let wedgeBackground = new Konva.Wedge({
+      radius: 400,
+      angle: angle,
+      fillRadialGradientStartPoint: 0,
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndPoint: 0,
+      fillRadialGradientEndRadius: 400,
+      fillRadialGradientColorStops: [0, startColor, 1, endColor],
+      fill: '#64e9f8',
+      fillPriority: 'radial-gradient',
+      stroke: '#ccc',
+      strokeWidth: 2
+    })
+
+    wedge.add(wedgeBackground)
+
+    let text = new Konva.Text({
+      text: reward,
+      fontFamily: 'Calibri',
+      fontSize: 50,
+      fill: 'white',
+      align: 'center',
+      stroke: 'yellow',
+      strokeWidth: 1,
+      rotation: (Math.PI + angle) / 2,
+      x: 380,
+      y: 30,
+      listening: false
+    })
+
+    wedge.add(text)
+    text.cache()
+
+    wedge.startRotation = wedge.rotation()
+
+    wheel.add(wedge)
+  }
+
+  function animate(frame) {
+
+    // handle wheel spin
+    let angularVelocityChange =
+      (angularVelocity * frame.timeDiff * (1 - angularFriction)) / 1000
+    angularVelocity -= angularVelocityChange
+
+    // activate / deactivate wedges based on point intersection
+    let shape = stage.getIntersection({
+      x: stage.width() / 2,
+      y: 100
+    })
+
+    if (controlled) {
+      if (angularVelocities.length > 10) {
+        angularVelocities.shift()
+      }
+
+      angularVelocities.push(
+        ((wheel.rotation() - lastRotation) * 1000) / frame.timeDiff
+      )
+    } else {
+      let diff = (frame.timeDiff * angularVelocity) / 1000
+      if (diff > 0.0001) {
+        wheel.rotate(diff)
+      } else if (!finished && !controlled) {
+        if (shape) {
+          let text = shape
+            .getParent()
+            .findOne('Text')
+            .text()
+          let price = text.split('\n').join('')
+          alert('You price is ' + price)
+        }
+        finished = true
+      }
+    }
+    lastRotation = wheel.rotation()
+
+    if (shape) {
+      if (shape && (!activeWedge || shape._id !== activeWedge._id)) {
+        pointer.y(20)
+
+        new Konva.Tween({
+          node: pointer,
+          duration: 0.3,
+          y: 30,
+          easing: Konva.Easings.ElasticEaseOut
+        }).play()
+
+        if (activeWedge) {
+          activeWedge.fillPriority('radial-gradient')
+        }
+        shape.fillPriority('fill')
+        activeWedge = shape
+      }
+    }
+  }
+
+  function init() {
+    stage = new Konva.Stage({
+      container: 'container',
+      width: width,
+      height: height
+    })
+    layer = new Konva.Layer()
+    wheel = new Konva.Group({
+      x: stage.width() / 2,
+      y: 410
+    })
+
+    for (let n = 0; n < numWedges; n++) {
+      addWedge(n)
+    }
+    pointer = new Konva.Wedge({
+      fillRadialGradientStartPoint: 0,
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndPoint: 0,
+      fillRadialGradientEndRadius: 30,
+      fillRadialGradientColorStops: [0, 'white', 1, 'red'],
+      stroke: 'white',
+      strokeWidth: 2,
+      lineJoin: 'round',
+      angle: 1,
+      radius: 30,
+      x: stage.width() / 2,
+      y: 33,
+      rotation: -90,
+      shadowColor: 'black',
+      shadowOffset: 3,
+      shadowBlur: 2,
+      shadowOpacity: 0.5
+    })
+
+    // add components to the stage
+    layer.add(wheel)
+    layer.add(pointer)
+    stage.add(layer)
+
+    // bind events
+    wheel.on('mousedown touchstart', function (evt) {
+      angularVelocity = 0
+      controlled = true
+      target = evt.target
+      finished = false
+    })
+
+    // add listeners to container
+    stage.addEventListener(
+      'mouseup touchend',
+      function () {
+        controlled = false
+        angularVelocity = getAverageAngularVelocity() * 5
+
+        if (angularVelocity > 20) {
+          angularVelocity = 20
+        } else if (angularVelocity < -20) {
+          angularVelocity = -20
+        }
+
+        angularVelocities = []
+      },
+      false
+    )
+
+    stage.addEventListener(
+      'mousemove touchmove',
+      function (evt) {
+        let mousePos = stage.getPointerPosition()
+        if (controlled && mousePos && target) {
+          let x = mousePos.x - wheel.getX()
+          let y = mousePos.y - wheel.getY()
+          let atan = Math.atan(y / x)
+          let rotation = x >= 0 ? atan : atan + Math.PI
+          let targetGroup = target.getParent()
+
+          wheel.rotation(rotation - targetGroup.startRotation - target.angle() / 2)
+        }
+      },
+      false
+    )
+
+    let anim = new Konva.Animation(animate, layer)
+
+    // wait one second and then spin the wheel
+    setTimeout(function () {
+      anim.start()
+    }, 1000)
+  }
+
+  init()
+</script>
+</body>
+</html>
