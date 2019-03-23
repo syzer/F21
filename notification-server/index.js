@@ -9,7 +9,7 @@ const waitTimeForDemo = 3
 const discountsServerUrl = 'http://127.0.0.1:5000/products?limit=3'
 
 const delay = seconds => data =>
-  new Promise(resolve => setTimeout(resolve(data)), seconds * 1000)
+  new Promise(resolve => setTimeout(() => resolve(data), seconds * 1000))
 
 const users = {}
 
@@ -20,14 +20,14 @@ io.on('connection', socket => {
     console.log('userData', userData)
     // TODO do not trust user auth data
     users[userData.uuid] = { coordinates: userData.coordinates }
-  })
 
-  axios
-    .get(discountsServerUrl + '&id=' + socket.id) // ask for personalized discounts for this user id
-    .then(({ data }) => data)
-    .then(delay(waitTimeForDemo)) // wait for some time.. because people need to explain what is happening on demo
-    .then(e => {
-      socket.emit('personalizedDiscounts', e)
-    })
+    return axios
+      .get(discountsServerUrl + '&id=' + userData.uuid || socket.id) // ask for personalized discounts for this user id
+      .then(({ data }) => data)
+      .then(delay(waitTimeForDemo)) // wait for some time.. because people need to explain what is happening on demo
+      .then(e => {
+        socket.emit('personalizedDiscounts', e)
+      })
+  })
 })
 server.listen(4000)
