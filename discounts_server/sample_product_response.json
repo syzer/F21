@@ -1,0 +1,90 @@
+[
+   {
+      "id":"440717800000",
+      "name":"ALANA Tischuhr",
+      "accessible_information_text":"ALANA Tischuhr 3 Franken 70 Rappen statt 14 Franken 90 Rappen 1 St\u00fcck, Angebot gilt nur vom 10.12.2018 bis 31.05.2019, solange Vorrat.",
+      "shoppinglist":{
+         "id":"440717800000",
+         "type":"product"
+      },
+      "is_novelty":false,
+      "type":"product",
+      "slug":"alana-tischuhr",
+      "slugs":[
+
+      ],
+      "price_info":{
+         "price":"3.70",
+         "accessible_price":"3 Franken 70 Rappen",
+         "original_price":"statt 14.90",
+         "accessible_original_price":"statt 14 Franken 90 Rappen",
+         "additional_price_info":null,
+         "quantity":null
+      },
+      "meta":{
+         "promotedCategory":{
+            "code":"BeSS_02",
+            "name":"Micasa",
+            "slug":"micasa",
+            "visible":true,
+            "parent_code":"root",
+            "level":1
+         },
+         "source":"PriceRepository",
+         "price":370,
+         "original_price":1490
+      },
+      "no_price_text":"Aktueller Tagespreis",
+      "product_tile_infos":{
+         "no_ratings":false,
+         "no_shopping_list":false,
+         "price_sub_text":"1 St\u00fcck, Angebot gilt nur vom 10.12.2018 bis 31.05.2019, solange Vorrat.",
+         "brand_label_images":[
+
+         ],
+         "has_color_variants":false,
+         "color_variants_hint":"in weiteren Farben erh\u00e4ltlich"
+      },
+      "categories":[
+         {
+            "name":"Schreibtischzubeh\u00f6r",
+            "code":"MIC_SHOP_CAT_Schreibtischzubehoer_Buerozubehoer_Arbeiten_AccessoiresTextilien",
+            "slug":"micasa/accessoires-textilien/arbeiten/buerozubehoer/schreibtischzubehoer"
+         },
+         {
+            "name":"B\u00fcrozubeh\u00f6r",
+            "code":"MIC_SHOP_CAT_Buerozubehoer_Arbeiten_AccessoiresTextilien",
+            "slug":"micasa/accessoires-textilien/arbeiten/buerozubehoer"
+         },
+         {
+            "name":"Arbeiten",
+            "code":"MIC_SHOP_CAT_Arbeiten_AccessoiresTextilien",
+            "slug":"micasa/accessoires-textilien/arbeiten"
+         },
+         {
+            "name":"Accessoires & Textilien",
+            "code":"MIC_SHOP_CAT_AccessoiresTextilien",
+            "slug":"micasa/accessoires-textilien"
+         },
+         {
+            "name":"Micasa",
+            "code":"BeSS_02",
+            "slug":"micasa"
+         }
+      ],
+      "url":"https://produkte.migros.ch/alana-tischuhr",
+      "hybrid_url":"https://hybrid-app.migros.ch/products/440717800000",
+      "placeholder_src":"https://image.migros.ch/original/30cf08257a361af49b48c1f0f5e16ee04e27f5dd.gif",
+      "image":{
+         "src":"https://image.migros.ch/2017-medium/36b1bc0abf4f92e8a29364d72c9ad2528480ec08/alana-tischuhr.jpg",
+         "retina_src":"https://image.migros.ch/2017-large/36b1bc0abf4f92e8a29364d72c9ad2528480ec08/alana-tischuhr.jpg",
+         "original":"https://image.migros.ch/original/36b1bc0abf4f92e8a29364d72c9ad2528480ec08/alana-tischuhr.jpg"
+      },
+      "retailer":{
+         "id":"micasa",
+         "name":"Micasa"
+      },
+      "tracking_information":"{\"name\":\"ALANA Tischuhr\",\"id\":\"440717800000\",\"price\":14.9,\"category\":\"micasa/accessoires-textilien/arbeiten/buerozubehoer/schreibtischzubehoer\",\"variant\":\"\",\"store\":\"micasa\",\"bossnumber\":\"221938370530\",\"bessnumber\":\"BeSS_02\",\"refprodId\":null,\"language\":\"de\",\"list\":null,\"listinfo\":null,\"position\":null,\"discounttype\":\"aktion\",\"discountamount\":\"\",\"discountedprice\":3.7,\"ratingavg\":null,\"ratingtotal\":null,\"brand\":\"\",\"label\":null}",
+      "html":""
+   }
+]
