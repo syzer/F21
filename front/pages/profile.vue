@@ -27,6 +27,9 @@ import Logo from '~/components/Logo.vue'
 import 'vue-thin-modal/dist/vue-thin-modal.css'
 
 export default {
+  components: {
+    Logo
+  },
   data() {
     return {
       selected: [], // Must be an array reference!
@@ -37,9 +40,6 @@ export default {
         { text: 'Music events', value: 'grape' }
       ]
     }
-  },
-  components: {
-    Logo
   },
   computed: {
     counter() {

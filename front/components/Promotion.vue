@@ -24,7 +24,18 @@
 
 <script>
 export default {
-  props: ['discount'],
+  props: {
+    discount: {
+      image: {
+        src: ''
+      },
+      name: '',
+      description: '',
+      price_info: {
+        price: 0
+      }
+    }
+  },
   computed: {
     image: function() {
       return this.discount.image
@@ -37,7 +48,7 @@ export default {
     },
     price_info: function() {
       return this.discount.price_info
-    },
+    }
   }
 }
 </script>
