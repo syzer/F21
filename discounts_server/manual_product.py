@@ -22,8 +22,8 @@ def moroccan_tea():
       'price': 16.0,
       'original_price': 17.2}
 
-    tea_json = json.dumps(tea_dict)
-    return tea_json
+    return tea_dict
+
 
 
 print(moroccan_tea())

@@ -26,7 +26,8 @@ def products():
     migros_response = json.loads(products_response.text)[0]
 
     tea = moroccan_tea()
-    merged_response = {**tea, **migros_response}
+    # TODO: merge the dicts
+    # merged_response = {tea, migros_response}
     return json.dumps(merged_response)
 
 products()
