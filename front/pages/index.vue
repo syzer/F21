@@ -8,18 +8,15 @@
           ShopXp
         </h1>
         <h2 class="subtitle">
-          Better localized shop experience??
+          Better localized shop experience
         </h2>
         <div class="links">
-          <a href="https://nuxtjs.org/" target="_blank" class="button--green"
-            >Documentation</a
-          >
           <a
             href="https://github.com/nuxt/nuxt.js"
             target="_blank"
             class="button--grey"
           >
-            GGG</a
+            See nearby discounts </a
           >
         </div>
       </div>
@@ -35,12 +32,12 @@ export default {
   components: {
     Logo,
     Navbar
+  },
+  computed: {
+    counter() {
+      return this.$store.state.counter
+    }
   }
-  // computed: {
-  //   counter() {
-  //     return this.$store.state.counter
-  //   }
-  // }
 }
 </script>
 
