@@ -13,7 +13,19 @@ import io from 'socket.io-client'
 
 export default {
   components: {},
-  computed: {},
+  computed: {
+    discounts() {
+      return this.$store.state.discounts
+    }
+  },
+  watch: {
+    discounts(newCount, oldCount) {
+      if (newCount !== oldCount) {
+        // console.log(`We have ${newCount} fruits now, yaay!`)
+        // TODO finishme
+      }
+    }
+  },
   mounted() {
     const socket = io('http://localhost:4000')
     socket.emit('chat message', 'connecting')
