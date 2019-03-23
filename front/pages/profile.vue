@@ -1,6 +1,6 @@
 <template>
   <section class="page">
-    <logo></logo>
+    <navbar />
     <section class="container">
       <div>
         <h5 class="title">Welcome {{ name }}</h5>
@@ -20,13 +20,13 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import Navbar from '~/components/Navbar.vue'
 
 import 'vue-thin-modal/dist/vue-thin-modal.css'
 
 export default {
   components: {
-    Logo
+    Navbar
   },
   data() {
     return {
