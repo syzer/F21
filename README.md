@@ -2,14 +2,16 @@
 
 # TODOS
 - [ ] Fake purchase history single user
+- [TOBI] Fake payment data on profile page
 - [ ] Recommender
 - [ANIL] Extract (or show extraction of discounts)
 - [LUKAS] GPS location tracking
-- [LUKAS] Push info
+- [TOBI] Map/voucher page
+
+## DONE
 - [ANIL] Show it’s running on six/PostFinance
 (screenshot)
-- [TOBI] Fake payment data
-[ ]
+- [LUKAS] Push info
 
 ## USP’s
 personalized (discount) only for you
@@ -24,7 +26,7 @@ USP: use Apple / Google push
 category/item level
 
 ## Demo
-- push notification
+- [Lukasz] push notification
 - 50 meters
 pay/vourcher
 Push notification (pusher/teaser)
