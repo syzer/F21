@@ -24,29 +24,33 @@
             </button>
             <modal name="example">
               <div class="basic-modal">
-                <div v-for="({ name, price_info, image,  description }, index) in discounts" :key="index">
-                <h3>{{ name }}</h3>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-6">
-                      <img :src="image.src" />
+                <div
+                  v-for="({ name, price_info, image, description },
+                  index) in discounts"
+                  :key="index"
+                >
+                  <h3>{{ name }}</h3>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-6">
+                        <img :src="image.src" />
+                      </div>
+                      <div class="col-6"></div>
                     </div>
-                    <div class="col-6"></div>
+                    <div class="row">
+                      <div class="col-12">
+                        <h3>{{ name }}</h3>
+                      </div>
+                    </div>
+                    <div class="row col-12">
+                      <div class="col-6">
+                        {{ description }}
+                      </div>
+                      <div class="col-6">
+                        {{ price_info.price }}
+                      </div>
+                    </div>
                   </div>
-                  <div class="row">
-                    <div class="col-12">
-                      <h3>{{ name }}</h3>
-                    </div>
-                  </div>
-                  <div class="row col-12">
-                    <div class="col-6">
-                      {{ description }}
-                    </div>
-                    <div class="col-6">
-                      {{ price_info.price }}
-                    </div>
-                  </div>
-                </div>
                 </div>
                 <button
                   class="button button--grey"
