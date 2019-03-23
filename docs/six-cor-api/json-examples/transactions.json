@@ -1,0 +1,157 @@
+{
+  "iban" : "CH5481230000001998736",
+  "designation" : "Piotr",
+  "entries" : [
+    {
+      "entryId" : "ENTRY123456789",
+      "transactionType" : "DBIT",
+      "bookingDate" : "2018-10-29",
+      "valueDate" : "2018-10-29",
+      "bankTransactionCode" : {
+        "domainCode" : "VISECA" 
+     },
+      "amount" : {
+        "currency" : "CHF",
+        "amount" : "59.57"
+      },
+      "transactions" : [
+        {
+          "transactionId" : "trx123456789-01",
+          "transactionType" : "DBIT",
+          "bankTransactionCode" : {
+            "domainCode" : "VISECA"
+          },
+          "amount" : {
+            "currency" : "CHF",
+            "amount" : "59.57"
+          },
+          "counterparty" : {
+            "name" : "A. Kuster Sirocco AG",
+            "postalAddress" : {
+              "structured" : {
+                "streetName" : "Hauptstrasse 22",
+                "postCode" : "8716",
+                "townName" : "Schmerikon",
+                "country" : "PL"
+              }
+            },
+            "account" : {
+              "type" : "MASTERCARD",
+              "identification" : "7910 5015 75100 0002"
+            }          
+	}        }
+      ]
+    },
+    {
+      "entryId" : "ENTRY223456789",
+      "transactionType" : "DBIT",
+      "bookingDate" : "2018-10-19",
+      "valueDate" : "2018-10-19",
+      "bankTransactionCode" : {
+        "domainCode" : "VISECA" 
+     },
+      "amount" : {
+        "currency" : "CHF",
+        "amount" : "217.20"
+      },
+      "additionalEntryInformation" : "Ski boots ",
+      "transactions" : [
+        {
+          "transactionId" : "trx223456789-01",
+          "transactionType" : "DBIT",
+          "bankTransactionCode" : {
+            "domainCode" : "VISECA"
+          },
+          "amount" : {
+            "currency" : "CHF",
+            "amount" : "217.20"
+          },
+          "counterparty" : {
+            "name" : "Ochsner Sport",
+            "account" : {
+              "type" : "MASTERCARD",
+              "identification" : "7910 5015 75100 0002"
+            }          
+	}        }
+      ]
+    },
+    
+    {
+      "entryId" : "ENTRY323456789",
+      "transactionType" : "DBIT",
+      "bookingDate" : "2018-10-09",
+      "valueDate" : "2018-10-09",
+      "bankTransactionCode" : {
+        "domainCode" : "VISECA"
+      },
+      "amount" : {
+        "currency" : "CHF",
+        "amount" : "12000"
+      },
+      "additionalEntryInformation" : "Pilot license ",
+      "transactions" : [
+        {
+          "transactionId" : "trx323456789-01",
+          "transactionType" : "DBIT",
+          "bankTransactionCode" : {
+            "domainCode" : "VISECA"
+          },
+          "amount" : {
+            "currency" : "CHF",
+            "amount" : "12000"
+          },
+          "counterparty" : {
+            "name" : "Aero Club der Schweiz",
+            "postalAddress": {
+              "unstructured" : {
+                "addressLines" : [
+                  "Lidostrasse 5",
+                  "6006 Luzern"
+                ],
+                "country" : "CH"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "entryId" : "ENTRY423456789",
+      "transactionType" : "DBIT",
+      "bookingDate" : "2018-10-10",
+      "valueDate" : "2018-10-010",
+      "bankTransactionCode" : {
+        "domainCode" : "VISECA"
+      },
+      "amount" : {
+        "currency" : "CHF",
+        "amount" : "400"
+      },
+      "additionalEntryInformation" : "Buying a relaxation chair ",
+      "transactions" : [
+        {
+          "transactionId" : "trx423456789-01",
+          "transactionType" : "DBIT",
+          "bankTransactionCode" : {
+            "domainCode" : "VISECA"
+          },
+          "amount" : {
+            "currency" : "CHF",
+            "amount" : "400"
+          },
+          "counterparty" : {
+            "name" : "Micasa"
+            }
+          }
+        }
+      ]
+    }
+
+  ],
+  "_links" : {
+    "self" : "/accounts/550e8400e29b11d4a716446655440000/transactions",
+    "account" : "/accounts/550e8400e29b11d4a716446655440000",
+    "balance" : "/accounts/550e8400e29b11d4a716446655440000/balance"
+  }
+}
+

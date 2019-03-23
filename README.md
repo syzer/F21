@@ -1,4 +1,4 @@
-# Ftontend TODOS
+# Frontend TODOS
 
 # TODOS
 - [ ] Fake purchase history single user
@@ -35,3 +35,19 @@ Screen payment/vaucher
 My profile
 categories (by bank)
 Agreement would be between shop and app
+
+## SETUP
+### Flask server
+
+1. Go to the discounts-server directory
+```bash
+$ cd discounts_server
+```
+2. Export the `FLASK_APP` environment variable
+```bash
+$ export FLASK_APP=server.py 
+```
+3. Run the flask server :ghost:
+```bash
+$ flask run 
+```
