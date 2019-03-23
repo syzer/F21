@@ -1,35 +1,46 @@
 <template>
-  <section class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        ShopXp
-      </h1>
-      <h2 class="subtitle">
-        Better localized shop experience
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green"
-          >Documentation</a
-        >
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-          >GitHub</a
-        >
+  <section class="page">
+    <navbar />
+    <section class="container">
+      <div>
+        <logo />
+        <h1 class="title">
+          ShopXp
+        </h1>
+        <h2 class="subtitle">
+          Better localized shop experience??
+        </h2>
+        <div class="links">
+          <a href="https://nuxtjs.org/" target="_blank" class="button--green"
+            >Documentation</a
+          >
+          <a
+            href="https://github.com/nuxt/nuxt.js"
+            target="_blank"
+            class="button--grey"
+          >
+            GGG</a
+          >
+        </div>
       </div>
-    </div>
+    </section>
   </section>
 </template>
-
 <script>
+// import { mapMutations } from 'vuex'
 import Logo from '~/components/Logo.vue'
+import Navbar from '~/components/Navbar.vue'
 
 export default {
   components: {
-    Logo
+    Logo,
+    Navbar
   }
+  // computed: {
+  //   counter() {
+  //     return this.$store.state.counter
+  //   }
+  // }
 }
 </script>
 
