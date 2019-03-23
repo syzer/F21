@@ -9,7 +9,8 @@ export const state = () => ({
       priceDiscounted: 16.0,
       priceOriginal: 17.2
     }
-  ]
+  ],
+  user: 'Piotr'
 })
 
 export const mutations = {
