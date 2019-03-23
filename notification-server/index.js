@@ -11,9 +11,16 @@ const discountsServerUrl = 'http://127.0.0.1:5000/products?limit=3'
 const delay = seconds => data =>
   new Promise(resolve => setTimeout(resolve(data)), seconds * 1000)
 
+const users = {}
+
 io.on('connection', socket => {
-  /* … */
   console.log('client connected', socket.id)
+
+  socket.on('getPersonalizedDiscounts', userData => {
+    console.log('userData', userData)
+    // TODO do not trust user auth data
+    users[userData.uuid] = { coordinates: userData.coordinates }
+  })
 
   axios
     .get(discountsServerUrl + '&id=' + socket.id) // ask for personalized discounts for this user id

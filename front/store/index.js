@@ -1,7 +1,7 @@
 import products from '../static/products.json'
 
 export const state = () => ({
-  counter: 0,
+  notifications: 0,
   discounts: [
     // {
     //   id: '5335294524',
@@ -14,11 +14,15 @@ export const state = () => ({
     // },
     products[0]
   ],
-  user: 'Piotr'
+  user: {
+    name: 'Piotr',
+    uuid: 'U9BQMSgobPvs4TSSAAAH' // TODO this is cookie
+  }
 })
 
 export const mutations = {
   newDiscounts(state, discounts) {
     state.discounts = [...discounts]
+    state.notifications++
   }
 }
