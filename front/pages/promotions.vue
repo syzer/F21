@@ -20,11 +20,11 @@
           </a>
           <div>
             <button type="button" class="button--grey" @click="open">
-              Open Modal
+              Show promotion
             </button>
             <modal name="example">
               <div class="basic-modal">
-                <h1 class="title">Modal Title</h1>
+                <h3>{{ discounts[0].name }}</h3>
                 <div class="container">
                   <div class="row">
                     <div class="col-6">
@@ -34,7 +34,7 @@
                   </div>
                   <div class="row">
                     <div class="col-12">
-                      <h3>Sirocco Moroccan Mint Tee</h3>
+                      <h3>{{ discounts[0].name }}</h3>
                     </div>
                   </div>
                   <div class="row col-12">

@@ -1,94 +1,24 @@
 <template>
   <section class="page">
-    <navbar />
     <section class="container">
-      <div>
-        <logo />
-        <h1 class="title">
-          ShopXp
-        </h1>
-        <h2 class="subtitle">
-          Better localized shop experience
-        </h2>
-        <div class="links">
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            class="button--grey"
-          >
-            See nearby discounts
-          </a>
-          <div>
-            <button type="button" class="button--grey" @click="open">
-              Open Modal
-            </button>
-            <modal name="example">
-              <div class="basic-modal">
-                <h1 class="title">Modal Title</h1>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-6">
-                      <img src="siroco.jpg" />
-                    </div>
-                    <div class="col-6"></div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12">
-                      <h3>Sirocco Moroccan Mint Tee</h3>
-                    </div>
-                  </div>
-                  <div class="row col-12">
-                    <div class="col-6">
-                      {{ discounts[0].description }}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  class="button button--grey"
-                  type="button"
-                  @click="close"
-                >
-                  Close Modal
-                </button>
-              </div>
-            </modal>
-          </div>
-        </div>
-      </div>
+      <img src="post-finance.png" />
+      <img width="50" src="shopXp.jpg" />
     </section>
   </section>
 </template>
 <script>
-import Logo from '~/components/Logo.vue'
-import Navbar from '~/components/Navbar.vue'
-import 'vue-thin-modal/dist/vue-thin-modal.css'
-
 export default {
-  components: {
-    Logo,
-    Navbar
-  },
-  computed: {
-    counter() {
-      return this.$store.state.counter
-    },
-    discounts() {
-      return this.$store.state.discounts
-    }
-  },
-  methods: {
-    open() {
-      this.$modal.push('example')
-    },
-
-    close() {
-      this.$modal.pop()
-    }
-  }
+  components: {},
+  computed: {}
 }
 </script>
 
 <style>
+.shopXp {
+  position: absolute;
+  top: 60px;
+  left: 80px;
+}
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -96,27 +26,5 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
 }
 </style>
