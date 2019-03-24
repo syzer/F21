@@ -5,7 +5,7 @@
         <img :src="image.src" />
         <h3>{{ name }}</h3>
         {{ description }}
-        {{ price_info.price }} {{ currency }} {{ price_info.original_price }}
+        {{ price_info.price }} {{ currency }} statt {{ price_info.original_price }}
         {{ currency }}
       </div>
     </div>
