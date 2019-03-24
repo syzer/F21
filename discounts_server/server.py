@@ -23,12 +23,14 @@ def products():
         limit = 20
 
     products_response = get_products(limit)
-    migros_response = json.loads(products_response.text)
+    migros_response = json.loads(products_response.text)[0]
 
     tea = moroccan_tea()
-    # merge the dicts
-    # merged_response = {**tea, **migros_response}
-    merged_response = [tea, migros_response]
+    merged_response = {**tea}
     return json.dumps(merged_response)
+
+products()
+print(products())
+
 
 
