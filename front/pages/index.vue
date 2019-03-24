@@ -33,7 +33,7 @@ export default {
     }
   },
   mounted() {
-    const serverUrl = 'http://471c8cba.eu.ngrok.io'
+    const serverUrl = '471c8cba.eu.ngrok.io'
     const socket = io(serverUrl)
 
     socket.emit('getPersonalizedDiscounts', {
