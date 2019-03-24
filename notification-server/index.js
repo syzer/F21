@@ -4,8 +4,9 @@ const app = new Koa()
 const server = http.createServer(app.callback())
 const io = require('socket.io')(server)
 const axios = require('axios')
+const { tap } = require('ramda')
 
-const waitTimeForDemo = 3
+const waitTimeForDemo = 2
 const discountsServerUrl = 'http://127.0.0.1:5000/products?limit=3'
 
 const delay = seconds => data =>
@@ -25,9 +26,8 @@ io.on('connection', socket => {
       .get(discountsServerUrl + '&id=' + userData.uuid || socket.id) // ask for personalized discounts for this user id
       .then(({ data }) => data)
       .then(delay(waitTimeForDemo)) // wait for some time.. because people need to explain what is happening on demo
-      .then(e => {
-        socket.emit('personalizedDiscounts', e)
-      })
+      .then(tap(e => socket.emit('personalizedDiscounts', e)))
+      .then(console.warn)
   })
 })
 server.listen(4000)

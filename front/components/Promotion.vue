@@ -26,14 +26,17 @@
 export default {
   props: {
     discount: {
-      image: {
-        src: ''
-      },
-      name: '',
-      description: '',
-      price_info: {
-        price: 0
-      }
+      type: Object,
+      default: () => ({
+        image: {
+          src: ''
+        },
+        name: '',
+        description: '',
+        price_info: {
+          price: 0
+        }
+      })
     }
   },
   computed: {

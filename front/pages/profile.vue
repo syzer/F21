@@ -4,15 +4,17 @@
     <section class="container">
       <div>
         <h5 class="title">Welcome {{ name }}</h5>
-        <b-form-group label="You are interested in recommendations for ">
+        <b-form-group label="Your shopping interests">
           <b-form-checkbox-group
             switches
             v-model="checked"
             stacked
             name="check-button"
+            allselected="true"
             :options="options"
           />
         </b-form-group>
+
         <b-input></b-input>
       </div>
     </section>

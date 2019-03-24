@@ -1,6 +1,8 @@
 # Frontend TODOS
 
 # TODOS
+- [ ] Push notification
+- [ ] Change notification to voucher
 - [ ] Fake purchase history profile user
 - [TOBI] Fake payment data on profile page
 - [ ] Recommender
