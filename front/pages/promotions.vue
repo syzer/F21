@@ -1,7 +1,7 @@
 <template>
   <section class="page">
     <navbar />
-    <section class="container">
+    <section class="container-fluid">
       <div>
         <logo />
         <h1 class="title">
@@ -11,20 +11,13 @@
           Better localized shop experience
         </h2>
         <div class="links">
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            class="button--grey"
-          >
-            See nearby discounts
-          </a>
           <img class="full-image" src="map.png" />
           <div>
             <button type="button" class="button--grey" @click="open">
               Show promotion
             </button>
             <modal name="example">
-              <div class="basic-modal">
+              <div class="basic-modal responsive-width">
                 <div v-for="(discount, index) in discounts" :key="index">
                   <Promotion :discount="discount" />
                 </div>
@@ -110,4 +103,9 @@ export default {
 .full-image {
   width: 100%;
 }
+
+.responsive-width {
+  width: 100% !important;
+}
+
 </style>

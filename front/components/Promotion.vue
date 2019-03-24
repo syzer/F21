@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-width">
+  <div class="container-fluid max-width">
     <div class="row">
       <div class="col-12">
         <img :src="image.src" />
