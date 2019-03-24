@@ -1,22 +1,11 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-6">
-        <img :src="image.src" />
-      </div>
-      <div class="col-6"></div>
-    </div>
+  <div class="container max-width">
     <div class="row">
       <div class="col-12">
+        <img :src="image.src" />
         <h3>{{ name }}</h3>
-      </div>
-    </div>
-    <div class="row col-12">
-      <div class="col-6">
         {{ description }}
-      </div>
-      <div class="col-6">
-        {{ price_info.price }}
+        {{ price_info.price }} {{ currency }} {{ price_info.original_price }} {{ currency }}
       </div>
     </div>
   </div>
@@ -24,6 +13,9 @@
 
 <script>
 export default {
+  data: () => ({
+    currency: 'CHF'
+  }),
   props: {
     discount: {
       type: Object,
@@ -35,7 +27,7 @@ export default {
         description: '',
         price_info: {
           price: 0
-        }
+        },
       })
     }
   },
@@ -55,3 +47,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.max-width {
+  width: 100%;
+}
+</style>
