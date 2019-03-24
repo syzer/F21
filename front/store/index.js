@@ -1,4 +1,4 @@
-// import products from '../static/products.json'
+// import discounts from '../static/discounts.json'
 
 export const state = () => ({
   notifications: 0,
@@ -12,7 +12,7 @@ export const state = () => ({
     //   price: 16.0,
     //   original_price: 17.2
     // },
-    // products[0]
+    // discounts[0]
   ],
   user: {
     name: 'Piotr',
