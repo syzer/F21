@@ -14,16 +14,16 @@ def hello_world():
 @app.route('/products')
 def products():
 
-    try:
-        limit = request.args.get('limit')
-    except Exception as inst:
-        print(type(inst))  # the exception instance
-        print(inst.args)  # arguments stored in .args
-        print(inst)
-        limit = 20
-
-    products_response = get_products(limit)
-    migros_response = json.loads(products_response.text)[0]
+    # try:
+    #     limit = request.args.get('limit')
+    # except Exception as inst:
+    #     print(type(inst))  # the exception instance
+    #     print(inst.args)  # arguments stored in .args
+    #     print(inst)
+    #     limit = 20
+    #
+    # products_response = get_products(limit)
+    # migros_response = json.loads(products_response.text)[0]
 
     tea = moroccan_tea()
     # merge the dicts

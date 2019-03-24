@@ -2,9 +2,9 @@
   <section class="page">
     <section class="container">
       <img width="100%" src="post-finance.png" />
-      <a href="/promotions"
-        ><img class="shopXp" width="30%" src="shopXp.jpg"
-      /></a>
+      <n-link to="/promotions">
+        <img class="shopXp" width="30%" src="shopXp.jpg" />
+      </n-link>
       <img
         v-if="notifications"
         class="shopXp-notification"

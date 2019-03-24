@@ -6,7 +6,7 @@ const io = require('socket.io')(server)
 const axios = require('axios')
 const { tap } = require('ramda')
 
-const waitTimeForDemo = 3
+const waitTimeForDemo = 2
 const discountsServerUrl = 'http://127.0.0.1:5000/products?limit=3'
 
 const delay = seconds => data =>

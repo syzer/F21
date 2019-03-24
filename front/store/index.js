@@ -1,4 +1,4 @@
-import products from '../static/products.json'
+// import products from '../static/products.json'
 
 export const state = () => ({
   notifications: 0,
@@ -12,7 +12,7 @@ export const state = () => ({
     //   price: 16.0,
     //   original_price: 17.2
     // },
-    products[0]
+    // products[0]
   ],
   user: {
     name: 'Piotr',
@@ -22,7 +22,12 @@ export const state = () => ({
 
 export const mutations = {
   newDiscounts(state, discounts) {
-    state.discounts = [...discounts]
+    // respond to new shape of discounts
+    if (!Array.isArray(discounts)) {
+      state.discounts = [discounts]
+    } else {
+      state.discounts = [...discounts]
+    }
     state.notifications++
   }
 }
