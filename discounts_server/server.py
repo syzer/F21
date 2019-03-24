@@ -29,7 +29,7 @@ def products():
     # merge the dicts
     # TODO fix me
     # merged_response = {**tea, **migros_response}
-    merged_response = {**tea}
+    merged_response = [tea, migros_response]
     return json.dumps(merged_response)
 
-products()
+print(products())
