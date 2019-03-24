@@ -29,6 +29,6 @@ def products():
     # merge the dicts
     # merged_response = {**tea, **migros_response}
     merged_response = [tea, migros_response]
-    return jsonify(json.dumps(merged_response))
+    return json.dumps(merged_response)
 
 
