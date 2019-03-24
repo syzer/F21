@@ -1,17 +1,18 @@
 # Frontend TODOS
 
 # TODOS
-- [ ] Fake purchase history single user
+- [ ] Fake purchase history profile user
 - [TOBI] Fake payment data on profile page
 - [ ] Recommender
-- [ANIL] Extract (or show extraction of discounts)
-- [LUKAS] GPS location tracking
 - [TOBI] Map/voucher page
 
 ## DONE
+- [LUKAS] GPS location tracking
 - [ANIL] Show it’s running on six/PostFinance
 (screenshot)
 - [LUKAS] Push info
+- [ANIL] Extract (or show extraction of discounts)
+
 
 ## USP’s
 personalized (discount) only for you
