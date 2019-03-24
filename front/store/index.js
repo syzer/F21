@@ -26,7 +26,7 @@ export const mutations = {
     if (!Array.isArray(discounts)) {
       state.discounts = [discounts]
     } else {
-      state.discounts = [...discounts]
+      state.discounts = discounts
     }
     state.notifications++
   }

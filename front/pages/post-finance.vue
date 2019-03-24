@@ -37,6 +37,11 @@ export default {
   mounted() {
     const socket = io('http://localhost:4000')
 
+    socket.emit('getPersonalizedDiscounts', {
+      coordinates: { lat: 46.958898999999995, lng: 7.4657898 }, // real call might be slow
+      uuid: this.$store.state.user.uuid
+    })
+
     this.$getLocation({}).then(coordinates =>
       socket.emit('getPersonalizedDiscounts', {
         coordinates,
