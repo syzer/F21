@@ -35,5 +35,8 @@ export const mutations = {
       state.discounts = discounts
     }
     state.notifications++
+  },
+  addInterest(state, newInterest) {
+    state.user.interests = [...state.user.interests, newInterest]
   }
 }
