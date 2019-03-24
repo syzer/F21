@@ -33,7 +33,7 @@ export default {
     }
   },
   mounted() {
-    const serverUrl = '471c8cba.eu.ngrok.io'
+    const serverUrl = 'http://localhost:4000'
     const socket = io(serverUrl)
 
     socket.emit('getPersonalizedDiscounts', {
