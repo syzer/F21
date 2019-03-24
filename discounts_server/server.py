@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import json
 from discounts_server.migros_services import get_ratings, get_products
 from discounts_server.manual_product import moroccan_tea
@@ -23,13 +23,12 @@ def products():
         limit = 20
 
     products_response = get_products(limit)
-    migros_response = json.loads(products_response.text)[0]
+    migros_response = json.loads(products_response.text)
 
     tea = moroccan_tea()
     # merge the dicts
-    # TODO fix me
     # merged_response = {**tea, **migros_response}
-    merged_response = {**tea}
-    return json.dumps(merged_response)
+    merged_response = [tea, migros_response]
+    return jsonify(json.dumps(merged_response))
 
-products()
+
