@@ -30,4 +30,3 @@ def moroccan_tea():
     return tea_dict
 
 
-print(moroccan_tea())
