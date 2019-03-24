@@ -1,6 +1,4 @@
 # coding=utf-8
-import json
-
 
 def moroccan_tea():
     tea_dict = {
@@ -18,13 +16,15 @@ def moroccan_tea():
                                        'biologischer Minze aus. Um die verfügbare Menge zu erhöhen, baut Sirocco ' \
                                        'mittlerweile selbst marokkanische Minze in nachhaltiger Qualität an.',
         'type': 'product',
-        'price': 16.0,
-        'original_price': 17.2,
         'image': {
             'src': "siroco.jpg",
             'retina_src': "siroco.jpg",
             'original': "siroco.jpg"
         },
+        'price_info': {
+            'price': 16.0,
+            'original_price': 17.2,
+        }
     }
 
     return tea_dict
