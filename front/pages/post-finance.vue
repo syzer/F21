@@ -5,6 +5,12 @@
       <a href="/promotions"
         ><img class="shopXp" width="30%" src="shopXp.jpg"
       /></a>
+      <img
+        v-if="notifications"
+        class="shopXp-notification"
+        width="8%"
+        src="red-dot.jpg"
+      />
     </section>
   </section>
 </template>
@@ -16,6 +22,9 @@ export default {
   computed: {
     discounts() {
       return this.$store.state.discounts
+    },
+    notifications() {
+      return this.$store.state.notifications
     }
   },
   watch: {
@@ -47,6 +56,13 @@ export default {
   position: absolute;
   bottom: 150px;
   right: 50px;
+}
+
+.shopXp-notification {
+  position: absolute;
+  z-index: 10;
+  bottom: 220px;
+  right: 35px;
 }
 
 .container {
