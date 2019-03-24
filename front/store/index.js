@@ -16,7 +16,13 @@ export const state = () => ({
   ],
   user: {
     name: 'Piotr',
-    uuid: 'U9BQMSgobPvs4TSSAAAH' // TODO this is cookie
+    uuid: 'U9BQMSgobPvs4TSSAAAH', // TODO this is cookie
+    interests: [
+      { text: 'Tea and coffee', value: 'orange' },
+      { text: 'Shoes', value: 'apple' },
+      { text: 'Furniture', value: 'pineapple' },
+      { text: 'Music events', value: 'grape' }
+    ]
   }
 })
 

@@ -107,5 +107,4 @@ export default {
 .responsive-width {
   width: 100% !important;
 }
-
 </style>

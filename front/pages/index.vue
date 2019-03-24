@@ -33,7 +33,8 @@ export default {
     }
   },
   mounted() {
-    const socket = io('http://localhost:4000')
+    const serverUrl = 'http://471c8cba.eu.ngrok.io'
+    const socket = io(serverUrl)
 
     socket.emit('getPersonalizedDiscounts', {
       coordinates: { lat: 46.958898999999995, lng: 7.4657898 }, // real call might be slow
