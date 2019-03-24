@@ -16,7 +16,6 @@
           <ul class="list-group">
             <b-form-group id="title" label="Your shopping interests">
               <b-form-checkbox-group
-                v-model="checked"
                 switches
                 stacked
                 name="check-button"

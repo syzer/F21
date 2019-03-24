@@ -18,7 +18,7 @@ export const state = () => ({
     name: 'Piotr',
     uuid: 'U9BQMSgobPvs4TSSAAAH', // TODO this is cookie
     interests: [
-      { text: 'Tea and coffee', value: 'orange' },
+      { text: 'Tea and coffee', value: 'orange', checked: true }, // TODO #checked=true
       { text: 'Shoes', value: 'apple' },
       { text: 'Furniture', value: 'pineapple' },
       { text: 'Music events', value: 'grape' }

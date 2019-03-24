@@ -13,9 +13,14 @@
         <div class="links">
           <img class="full-image" src="map.png" />
           <div>
-            <button type="button" class="button--grey" @click="open">
-              Show promotion
-            </button>
+            <div class="row">
+              <button type="button" class="button--grey" @click="open">
+                Show promotion
+              </button>
+              <n-link to="/profile" class="button--grey">
+                My Profile
+              </n-link>
+            </div>
             <modal name="example">
               <div class="basic-modal responsive-width">
                 <div v-for="(discount, index) in discounts" :key="index">
