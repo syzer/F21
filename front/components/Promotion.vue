@@ -5,7 +5,8 @@
         <img :src="image.src" />
         <h3>{{ name }}</h3>
         {{ description }}
-        {{ price_info.price }} {{ currency }} {{ price_info.original_price }} {{ currency }}
+        {{ price_info.price }} {{ currency }} {{ price_info.original_price }}
+        {{ currency }}
       </div>
     </div>
   </div>
@@ -13,9 +14,6 @@
 
 <script>
 export default {
-  data: () => ({
-    currency: 'CHF'
-  }),
   props: {
     discount: {
       type: Object,
@@ -27,10 +25,13 @@ export default {
         description: '',
         price_info: {
           price: 0
-        },
+        }
       })
     }
   },
+  data: () => ({
+    currency: 'CHF'
+  }),
   computed: {
     image: function() {
       return this.discount.image
