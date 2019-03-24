@@ -1,7 +1,6 @@
 # Frontend TODOS
 
 # TODOS
-- [ ] Push notification
 - [ ] Change notification to voucher
 - [ ] Fake purchase history profile user
 - [TOBI] Fake payment data on profile page
@@ -14,6 +13,7 @@
 (screenshot)
 - [LUKAS] Push info
 - [ANIL] Extract (or show extraction of discounts)
+- [LUKASZ] Push notification
 
 
 ## USP’s
@@ -54,3 +54,6 @@ $ export FLASK_APP=server.py
 ```bash
 $ flask run 
 ```
+
+## Stuff included
+

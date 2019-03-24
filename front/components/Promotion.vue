@@ -11,6 +11,14 @@
         <span class="price"> {{ price_info.original_price }} </span>
         {{ currency }}
       </div>
+      <div class="col-6">
+        <h3>Voucher code</h3>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">U9BQMSgobPvs4TSSAAAH</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

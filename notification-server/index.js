@@ -8,7 +8,7 @@ const { tap } = require('ramda')
 
 const waitTimeForDemo = 2
 // const discountsServerUrl = 'http://127.0.0.1:5000/products?limit=3'
-const discountsServerUrl = 'http://e3a5c66c.eu.ngrok.io/products?limit=3'
+const discountsServerUrl = 'http://ae4b6fba.eu.ngrok.io/products?limit=3'
 
 const delay = seconds => data =>
   new Promise(resolve => setTimeout(() => resolve(data), seconds * 1000))
