@@ -5,8 +5,10 @@
         <img :src="image.src" />
         <h3>{{ name }}</h3>
         {{ description }}
-        {{ price_info.price }} {{ currency }} statt
-        {{ price_info.original_price }}
+        <span class="price">{{ price_info.price }} </span> {{ currency }}
+        <br />statt
+        <br />
+        <span class="price"> {{ price_info.original_price }} </span>
         {{ currency }}
       </div>
     </div>
@@ -53,5 +55,8 @@ export default {
 <style>
 .max-width {
   width: 100%;
+}
+.price {
+  font-weight: bold;
 }
 </style>
