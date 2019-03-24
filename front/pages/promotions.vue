@@ -18,6 +18,7 @@
           >
             See nearby discounts
           </a>
+          <img class="full-image" src="map.png" />
           <div>
             <button type="button" class="button--grey" @click="open">
               Show promotion
@@ -104,5 +105,9 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+
+.full-image {
+  width: 100%;
 }
 </style>
