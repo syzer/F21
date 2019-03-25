@@ -15,17 +15,31 @@
         <h3>Voucher code</h3>
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text">U9BQMSgobPvs4TSSAAAH</span>
+            <span class="input-group-text">{{ uuid }}</span>
           </div>
         </div>
+        <qrcode :value="{ uuid }" :options="{ width: 300 }"></qrcode>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import QrcodeVue from 'qrcode.vue'
+
 export default {
+  comments: {
+    QrcodeVue
+  },
   props: {
+    uuid: {
+      type: String,
+      default: 'U9BQMSgobPvs4TSSAAAH'
+    },
+    size: {
+      type: Number,
+      default: 300
+    },
     discount: {
       type: Object,
       default: () => ({
@@ -40,9 +54,11 @@ export default {
       })
     }
   },
-  data: () => ({
-    currency: 'CHF'
-  }),
+  data() {
+    return {
+      currency: 'CHF'
+    }
+  },
   computed: {
     image: function() {
       return this.discount.image

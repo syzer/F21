@@ -29,7 +29,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vue-notifications', '~/plugins/vue-geolocation'],
+  plugins: ['~/plugins/vue-notifications', '~/plugins/vue-geolocation', '~/plugins/vue-qrcode'],
 
   /*
    ** Nuxt.js modules
