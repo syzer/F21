@@ -15,13 +15,13 @@ export const state = () => ({
     // discounts[0]
   ],
   user: {
-    name: 'Piotr',
+    name: 'Billie',
     uuid: 'U9BQMSgobPvs4TSSAAAH', // TODO this is cookie
     interests: [
-      { text: 'Tea and coffee', value: 'orange', checked: true }, // TODO #checked=true
-      { text: 'Shoes', value: 'apple' },
-      { text: 'Furniture', value: 'pineapple' },
-      { text: 'Music events', value: 'grape' }
+      { text: 'Gothic jewelry', value: 'apple', checked: true }, // TODO #checked=true
+      { text: 'Nike sneakers' },
+      { text: 'Vegan food' },
+      { text: 'Concerts' }
     ]
   }
 })

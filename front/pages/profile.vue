@@ -4,17 +4,16 @@
     <section class="container-resoponsive">
       <div class="row col-12">
         <div class="col-6">
-          <h3>Hi {{ name }}</h3>
-          <img src="img_avatar.png" alt="Avatar" class="avatar" />
+          <h3 class="subtitle">Welcome {{ name }}</h3>
         </div>
         <div class="col-6">
-          <img src="map.png" alt="Avatar" class="map" />
+          <img src="Billie_Eilish_at_Icebox.png" alt="Avatar" class="avatar" />
         </div>
       </div>
       <div class="row col-12">
         <div class="col-12">
           <ul class="list-group">
-            <b-form-group id="title" label="Your shopping interests">
+            <b-form-group id="title" label="Interested in">
               <b-form-checkbox-group
                 switches
                 stacked
@@ -101,11 +100,19 @@ export default {
   width: 150px;
   height: 150px;
   border-radius: 50%;
+  padding-bottom: 15px;
 }
 .map {
   top: 50px;
   width: 150px;
   height: 150px;
+}
+.subtitle {
+  font-weight: 300;
+  font-size: 28px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 15px;
 }
 #title > legend {
   margin-bottom: 0.5rem;
